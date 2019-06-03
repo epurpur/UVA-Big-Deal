@@ -7,7 +7,8 @@ Created on Mon Jun  3 16:25:09 2019
 """
 
 """Source file here to show how we've been interpreting the 1figr data. Data
-about UVA's big deal scholarly publication contracts"""
+about UVA's big deal scholarly publication contracts. We are pulling from
+JournalsPerProvider.csv"""
 
 import pandas as pd
 import numpy as np
