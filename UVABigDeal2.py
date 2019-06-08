@@ -7,6 +7,8 @@ Created on Tue Jun  4 15:18:41 2019
 """
 
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 
 data = pd.read_csv("JournalsPerProvider.csv", skiprows=8)
 
@@ -17,29 +19,34 @@ data = pd.read_csv("JournalsPerProvider.csv", skiprows=8)
 data = pd.read_csv('Packages.csv', skiprows=8)
 
 
-#print("Unique Domains:", data.Domain.unique())
-#print()
-#print("Unique Fields:", data.Field.unique())
+import numpy as np
+import matplotlib.pyplot as plt
+ 
+# set width of bar
+barWidth = 0.2
+ 
+# set height of bar
+bars1 = [12, 30, 1, 8, 22]
+bars2 = [28, 6, 16, 5, 10]
+bars3 = [29, 3, 24, 25, 17]
+ 
+# Set position of bar on X axis
+r1 = np.arange(len(bars1))
+r2 = [x + barWidth for x in r1]
+r3 = [x + barWidth for x in r2]
+ 
+print(r2)
+print(r3)
 
-#
-#fields_data = data.groupby(['Field', 'Downloads JR5 2017 in 2017'])
-#for i in fields_data:
-#    print(i)
-
-
-packages = ['AIP', 'American Chemical Society', 'American Institute of Aeronautics and Astronautics', 'American Mathematical Society', 'American Physical Society', 'American Psychological Association', 'American Society of Civil Engineers', 'American Society of Mechanical Engineers', 'Annual Reviews', 'Association for Computing Machinery', 'BioOne', 'Brill', 'Cambridge UP', 'DeGruyter', 'Ebsco', 'Elsevier', 'Emerald', 'Gale', 'IEEE', 'IOPscience', 'JSTOR', 'Karger', 'MIT Press', 'Modern Language Association', 'Ovid', 'Oxford UP', 'ProQuest', 'Project MUSE', 'Royal Society of Chemistry', 'SPIE', 'Sage', 'Springer', 'Taylor & Francis', 'U Chicago Press', 'Wiley']
-
-unwanted = ['Elsevier', 'Wiley', 'Sage', 'Taylor & Francis', 'Springer']
-big5 = []
-
-for i in packages:
-    if i in unwanted:
-        packages.remove(i)
-        big5.append(i)
-
-for i in packages:
-    print(i)
-    
-print()
-for i in big5:
-    print(i)
+# Make the plot
+plt.bar(r1, bars1, color='#7f6d5f', width=barWidth, edgecolor='white', label='var1')
+plt.bar(r2, bars2, color='#557f2d', width=barWidth, edgecolor='white', label='var2')
+plt.bar(r3, bars3, color='#2d7f5e', width=barWidth, edgecolor='white', label='var3')
+ 
+# Add xticks on the middle of the group bars
+plt.xlabel('group', fontweight='bold')
+plt.xticks([r + barWidth for r in range(len(bars1))], ['A', 'B', 'C', 'D', 'E'])
+ 
+# Create legend & Show graphic
+#plt.legend()
+#plt.show()
