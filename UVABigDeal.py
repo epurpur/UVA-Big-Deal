@@ -34,13 +34,6 @@ def read_jr5():
     plt.grid()
     plt.show()
 
-    jr5_totals.sort()
-    over_5000_downloads = [total for total in jr5_totals if total > 5000]
-    under_5000_downloads = [total for total in jr5_totals if total < 5000]
-
-    percent_under_5000_downloads = (len(under_5000_downloads) / len(jr5_totals))
-    print(f"{len(under_5000_downloads)} of {len(jr5_totals)} providers have less than 5,000 downloads. ({round(percent_under_5000_downloads, 2)}%)")
-
 
 def read_jr5_no_elsevier():
     """Make 'Dowloads JR5 2017 in 2017 table. Remove 'Elsevier' from results
@@ -64,13 +57,6 @@ def read_jr5_no_elsevier():
     plt.barh(jr5_packages, jr5_totals, height=.8, color='green')
     plt.grid()
     plt.show()
-
-    jr5_totals.sort()
-    over_5000_downloads = [total for total in jr5_totals if total > 5000]
-    under_5000_downloads = [total for total in jr5_totals if total < 5000]
-
-    percent_under_5000_downloads = (len(under_5000_downloads) / len(jr5_totals))
-    print(f"{len(under_5000_downloads)} of {len(jr5_totals)} providers have less than 5,000 downloads. ({round(percent_under_5000_downloads, 2)}%)")
 
 
 def jr5_big5():
@@ -146,13 +132,6 @@ def read_jr1():
     plt.grid()
     plt.show()
 
-    jr1_totals.sort()
-    over_100k_downloads = [total for total in jr1_totals if total > 100000]
-    under_100k_downloads = [total for total in jr1_totals if total < 100000]
-
-    percent_under_100k_downloads = (len(under_100k_downloads) / len(jr1_totals))
-    print(f"{len(under_100k_downloads)} of {len(jr1_totals)} providers have less than 100,000 downloads. ({round(percent_under_100k_downloads, 2)}%)")
-
 
 def read_jr1_no_elsevier():
     """Make downloads 'JR1 2017' table. Remove 'Elsevier' from results to make table nicer to look at. 
@@ -175,13 +154,6 @@ def read_jr1_no_elsevier():
     plt.barh(jr1_packages, jr1_totals, height=.8, color='green')
     plt.grid()
     plt.show()
-
-    jr1_totals.sort()
-    over_100k_downloads = [total for total in jr1_totals if total > 100000]
-    under_100k_downloads = [total for total in jr1_totals if total < 100000]
-
-    percent_under_100k_downloads = (len(under_100k_downloads) / len(jr1_totals))
-    print(f"{len(under_100k_downloads)} of {len(jr1_totals)} providers have less than 100,000 downloads. ({round(percent_under_100k_downloads, 2)}%)")
 
 
 def jr1_big5():
@@ -352,22 +324,134 @@ def percent_jr5_of_jr1():
         print(i[0], "-" , i[1])
 
 
-read_jr5()
-read_jr5_no_elsevier()
-jr5_big5()
-jr5_other_providers()
+def journals_by_domain():
+    """Counting occurrences of downloads in each domain from JournalsPerPackage.csv"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    domains_list = data.Domain.tolist()
 
-read_jr1()
-read_jr1_no_elsevier()
-jr1_big5()
-jr1_other_providers()
+    counted_domains = pd.Series(domains_list).value_counts().reset_index().values.tolist()
+    
+    domains = [x[0] for x in counted_domains]
+    counts = [x[1] for x in counted_domains]
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Downloaded articles, Occurrences by Domain')
+    plt.barh(domains, counts, height=.8, color='green')
+    plt.grid()
+    plt.show()
+    
+    
+def journals_by_field():
+    """Counting occurrences of downloads in each field from JournalsPerPackage.csv"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    fields_list = data.Field.tolist()
+
+    counted_fields = pd.Series(fields_list).value_counts().reset_index().values.tolist()
+    
+    fields = [x[0] for x in counted_fields]
+    counts = [x[1] for x in counted_fields]
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Downloaded articles, Occurrences by Field')
+    plt.barh(fields, counts, height=.8, color='green')
+    plt.grid()
+    plt.show() 
 
 
-jr1_jr5_big5_grouped_bar_chart() 
-jr1_jr5_other_providers_grouped_bar_chart()
-        
-percent_jr5_of_jr1()
+def journals_by_field_big5():
+    """Counting occurences of downloads in each field from Journals Per Package.csv
+    from the big5 publishers. Big 5 are: Elsevier, Wiley, Springer, Sage, Taylor & Francis"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    providers_list = data.Provider.tolist()
+    fields_list = data.Field.tolist()
+    
+    zipped = list(zip(providers_list, fields_list))
+    
+    big5 = ['Elsevier', 'Wiley', 'Springer', 'Taylor & Francis', 'Sage']
+    big5_data = []
+    
+    for i in zipped:
+        if i[0] in big5:
+            big5_data.append(i)
+            
+    fields_only = [x[1] for x in big5_data]
+    
+    counted_fields = pd.Series(fields_only).value_counts().reset_index().values.tolist()
+    
+    fields = [x[0] for x in counted_fields]
+    counts = [x[1] for x in counted_fields]
 
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Downloaded articles, Occurrences by Field (Big5 Providers)')
+    plt.barh(fields, counts, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+    
+def journals_by_field_other_providers():
+    """Counting occurences of downloads in each field from Journals Per Package.csv
+    from the big5 publishers. Big 5 are: Elsevier, Wiley, Springer, Sage, Taylor & Francis"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    providers_list = data.Provider.tolist()
+    fields_list = data.Field.tolist()
+    
+    zipped = list(zip(providers_list, fields_list))
+    
+    big5 = ['Elsevier', 'Wiley', 'Springer', 'Taylor & Francis', 'Sage']
+    not_big5_data = []
+    
+    for i in zipped:
+        if i[0] not in big5:
+            not_big5_data.append(i)
+            
+    fields_only = [x[1] for x in not_big5_data]
+    
+    counted_fields = pd.Series(fields_only).value_counts().reset_index().values.tolist()
+    
+    fields = [x[0] for x in counted_fields]
+    counts = [x[1] for x in counted_fields]
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Downloaded articles, Occurrences by Field (Not Big5 Providers)')
+    plt.barh(fields, counts, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+
+#read_jr5()
+#read_jr5_no_elsevier()
+#jr5_big5()
+#jr5_other_providers()
+#
+#read_jr1()
+#read_jr1_no_elsevier()
+#jr1_big5()
+#jr1_other_providers()
+#
+#
+#jr1_jr5_big5_grouped_bar_chart() 
+#jr1_jr5_other_providers_grouped_bar_chart()
+#        
+#percent_jr5_of_jr1()
+#journals_by_domain()
+#journals_by_field()
+
+journals_by_field_big5()
+journals_by_field_other_providers()
 
 
 
