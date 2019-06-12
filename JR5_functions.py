@@ -138,38 +138,23 @@ def percent_jr5_of_jr1():
         print(i[0], "-" , i[1])
         
         
-def jr5_journals_by_field_by_provider():
+def jr5_by_field_by_provider():
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
-    
-    data_list = data.groupby(['Provider'], as_index=False).sum().values.tolist()
-    providers_list = []
-    
-    for i in data_list:
-        if i[0] not in providers_list:
-            providers_list.append(i[0])
-    
+        
     user_choice = 'AIP'
-#    user_choice = input("Enter provider name: ")
-#    if user_choice in providers_list:
-#        print("ok")
-#    else:
-#        print("not in list")
     
     subset_by_provider = data.loc[data['Provider'] == user_choice]
     
-    subset_data_list = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
-    subset_fields = []
     
-    for i in subset_data_list:
-        if i[0] not in subset_fields:
-            subset_fields.append(i[0])
+
+            
     
+    sums_by_field = subset_by_provider.groupby(['Field'])['References'].sum()
+    print(sums_by_field)
     
+
             
     
     
-        
-        
-        
-jr5_journals_by_field_by_provider()
+jr5_by_field_by_provider()

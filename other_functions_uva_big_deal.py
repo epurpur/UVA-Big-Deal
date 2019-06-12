@@ -122,3 +122,4 @@ def journals_by_field_other_providers():
     plt.barh(fields, counts, height=.8, color='green')
     plt.grid()
     plt.show() 
+    
