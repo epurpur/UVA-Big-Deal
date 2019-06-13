@@ -194,15 +194,12 @@ def jr1_jr5_other_providers_grouped_bar_chart():
    plt.show()
    
    
-def jr1_by_field_by_provider(user_choice):
+def jr1_by_field_by_provider(provider_name):
     """Charts JR1 downloads by field for chosen provider. User inputs provider name and dynamically generates chart for that provider"""
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
-#    user_choice = input('Enter provider name: ')
-#    user_choice = 'Elsevier'
-    
-    subset_by_provider = data.loc[data['Provider'] == user_choice]
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
     
     fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
     fields = []
@@ -215,7 +212,7 @@ def jr1_by_field_by_provider(user_choice):
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'JR1 Downloads by field for Provider: {user_choice}')
+    plt.suptitle(f'JR1 Downloads by field for Provider: {provider_name}')
     plt.barh(fields, sums_by_field, height=.8, color='green')
     
     plt.grid()

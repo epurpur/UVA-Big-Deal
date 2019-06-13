@@ -16,7 +16,7 @@ import JR5_functions as jr5
 import other_functions_uva_big_deal as other
     
 
-user_choice = 'Elsevier'                    #Changes output for the 'dependent' functions
+provider_name = 'Elsevier'                    #Changes output for the 'dependent' functions
 
 
 if __name__ == '__main__':
@@ -42,9 +42,10 @@ if __name__ == '__main__':
 #    other.journals_by_field_other_providers()
     
     
-    ###### DEPENDENT FUNCTIONS ############
-    jr5.jr5_by_field_by_provider(user_choice)
-    jr1.jr1_by_field_by_provider(user_choice)
+    ###### DEPENDENT FUNCTIONS - dependent on provider_name ############
+    jr5.jr5_by_field_by_provider(provider_name)
+    jr1.jr1_by_field_by_provider(provider_name)
+    other.references_by_field_by_provider(provider_name)
 
 
 

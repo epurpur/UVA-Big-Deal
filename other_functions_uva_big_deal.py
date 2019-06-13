@@ -122,4 +122,55 @@ def journals_by_field_other_providers():
     plt.barh(fields, counts, height=.8, color='green')
     plt.grid()
     plt.show() 
+
+
+def references_by_field_by_provider(provider_name):
+    """Charts references by field for chosen provider. User inputs provider name and dynamically generates chart for that provider"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+ 
+    for i in fields_data:
+        fields.append(i[0])
+    
+    sums_by_field = subset_by_provider.groupby(['Field'])['References'].sum()     #sum of downloads per field
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'References by field for Provider: {provider_name}')
+    plt.barh(fields, sums_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+
+
+provider_name = 'Elsevier'
+def publications_by_field_by_provider(provider_name):
+    """Charts publications by field for chosen provider. User inputs provider name and dynamically generates chart for that provider"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+ 
+    for i in fields_data:
+        fields.append(i[0])
+    
+    sums_by_field = subset_by_provider.groupby(['Field'])['Papers'].sum()     #sum of downloads per field
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Publications by field for Provider: {provider_name}')
+    plt.barh(fields, sums_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+
+publications_by_field_by_provider(provider_name)
     
