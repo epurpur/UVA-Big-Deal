@@ -14,6 +14,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from operator import itemgetter
 
+
 def read_jr5():
     """Make 'Downloads JR5 2017 in 2017' table. JR5 data is all downloads by provider of 2017 articles in 2017"""
 
@@ -138,23 +139,33 @@ def percent_jr5_of_jr1():
         print(i[0], "-" , i[1])
         
         
-def jr5_by_field_by_provider():
+def jr5_by_field_by_provider(user_choice):
+    """Charts JR5 downloads by field for chosen provider. User inputs provider name and dynamically generates chart for that provider"""
+    
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
-        
-    user_choice = 'AIP'
+    
+#    user_choice = input('Enter provider name: ')
     
     subset_by_provider = data.loc[data['Provider'] == user_choice]
     
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+ 
+    for i in fields_data:
+        fields.append(i[0])
+    
+    sums_by_field = subset_by_provider.groupby(['Field'])['Downloads JR5 2017 in 2017'].sum()     #sum of downloads per field
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'JR5 Downloads by field for Provider: {user_choice}')
+    plt.barh(fields, sums_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+    
     
 
-            
-    
-    sums_by_field = subset_by_provider.groupby(['Field'])['References'].sum()
-    print(sums_by_field)
     
 
-            
-    
-    
-jr5_by_field_by_provider()

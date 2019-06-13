@@ -189,7 +189,40 @@ def jr1_jr5_other_providers_grouped_bar_chart():
    plt.bar(jr5_position, jr5_totals, color='red', width=bar_width, label='JR5 downloads')
    plt.xticks([r+bar_width for r in range(len(packages))], packages)
    plt.xticks(rotation=90)
-    
 
    plt.legend()            #grabs the 'label' argument from plt.bar
    plt.show()
+   
+   
+def jr1_by_field_by_provider(user_choice):
+    """Charts JR1 downloads by field for chosen provider. User inputs provider name and dynamically generates chart for that provider"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+#    user_choice = input('Enter provider name: ')
+#    user_choice = 'Elsevier'
+    
+    subset_by_provider = data.loc[data['Provider'] == user_choice]
+    
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+ 
+    for i in fields_data:
+        fields.append(i[0])
+    
+    sums_by_field = subset_by_provider.groupby(['Field'])['Downloads JR1 2017'].sum()     #sum of downloads per field
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'JR1 Downloads by field for Provider: {user_choice}')
+    plt.barh(fields, sums_by_field, height=.8, color='green')
+    
+    plt.grid()
+    plt.show()    
+   
+   
+   
+   
+   
+   
