@@ -123,20 +123,29 @@ def percent_jr5_of_jr1():
     
     combined = list(zip(jr5_data_by_package, jr1_data_by_package))
     
-#    print(combined[0][0][1])
-#    print(combined[0][0][4])
-#    print((combined[0][0][1])/(combined[0][0][4]))
-    
     final_rank = []
     
     for i in combined:
-        final_rank.append((i[0][0], round((i[0][1]/i[0][4]),4)))        #round to 4 decimal places
+        provider_name = i[0][0]
+        jr5_downloads = i[0][1]
+        jr1_downloads = i[0][4]
+        final_rank.append((provider_name, round((jr5_downloads/jr1_downloads), 4)))   #round to 4 decimal places
         
-    final_rank_sorted = tuple(sorted(final_rank, key=itemgetter(1), reverse=True)   )
+    final_rank_sorted = tuple(sorted(final_rank, key=itemgetter(1), reverse=True))
+    provider = []
+    percent_count = []
     
-    print("% JR5 downloads of total downloads in 2017 (JR1) by Provider \n")
     for i in final_rank_sorted:
-        print(i[0], "-" , i[1])
+        provider.append(i[0])
+        percent_count.append(i[1])
+        
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Percent JR5 downloads of JR1 downloads')
+    plt.barh(provider, percent_count, height=.8, color='green')
+    plt.grid()
+    plt.show() 
         
         
 def jr5_by_field_by_provider(provider_name):
@@ -162,7 +171,7 @@ def jr5_by_field_by_provider(provider_name):
     plt.grid()
     plt.show() 
     
-    
+percent_jr5_of_jr1()
 
     
 

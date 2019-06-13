@@ -148,7 +148,6 @@ def references_by_field_by_provider(provider_name):
     plt.show() 
 
 
-provider_name = 'Elsevier'
 def publications_by_field_by_provider(provider_name):
     """Charts publications by field for chosen provider. User inputs provider name and dynamically generates chart for that provider"""
     
@@ -172,5 +171,4 @@ def publications_by_field_by_provider(provider_name):
     plt.grid()
     plt.show() 
 
-publications_by_field_by_provider(provider_name)
     

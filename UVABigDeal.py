@@ -46,6 +46,7 @@ if __name__ == '__main__':
     jr5.jr5_by_field_by_provider(provider_name)
     jr1.jr1_by_field_by_provider(provider_name)
     other.references_by_field_by_provider(provider_name)
+    other.publications_by_field_by_provider(provider_name)
 
 
 
