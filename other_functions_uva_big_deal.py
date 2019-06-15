@@ -171,4 +171,4 @@ def publications_by_field_by_provider(provider_name):
     plt.grid()
     plt.show() 
 
-    
+  

@@ -218,8 +218,31 @@ def jr1_by_field_by_provider(provider_name):
     plt.grid()
     plt.show()    
    
+    
+def jr1_percent_field_by_provider(provider_name):
+    """Charts % of JR1 downloads by field for a given provider"""
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+ 
+    for i in fields_data:
+        fields.append(i[0])
+        
+    sums_by_field = subset_by_provider.groupby(['Field'])['Downloads JR1 2017'].sum().tolist()     #sum of downloads per field
+    
+    total_downloads = sum(sums_by_field)
+        
+    percent_by_field = [round((i/total_downloads), 4) for i in sums_by_field]
    
-   
-   
-   
-   
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Percent of total JR1 downloads by field for: {provider_name}')
+    plt.barh(fields, percent_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+    
+#jr1_percent_field_by_provider('Elsevier')
