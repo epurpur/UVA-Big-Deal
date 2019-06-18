@@ -207,7 +207,11 @@ def jr1_by_field_by_provider(provider_name):
     for i in fields_data:
         fields.append(i[0])
     
+    fields = list(reversed(fields))             #to add to bar graph in reverse alphabetical order so it looks nicer
+    
     sums_by_field = subset_by_provider.groupby(['Field'])['Downloads JR1 2017'].sum()     #sum of downloads per field
+    
+    sums_by_field = list(reversed(sums_by_field))
     
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
@@ -230,8 +234,12 @@ def jr1_percent_field_by_provider(provider_name):
  
     for i in fields_data:
         fields.append(i[0])
-        
+       
+    fields = list(reversed(fields))             #to add to bar graph in reverse alphabetical order so it looks nicer        
+
     sums_by_field = subset_by_provider.groupby(['Field'])['Downloads JR1 2017'].sum().tolist()     #sum of downloads per field
+
+    sums_by_field = list(reversed(sums_by_field))  
     
     total_downloads = sum(sums_by_field)
         
@@ -245,4 +253,3 @@ def jr1_percent_field_by_provider(provider_name):
     plt.grid()
     plt.show() 
     
-#jr1_percent_field_by_provider('Elsevier')

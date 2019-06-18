@@ -16,7 +16,7 @@ import JR5_functions as jr5
 import other_functions_uva_big_deal as other
     
 
-provider_name = 'Elsevier'                    #Changes output for the 'dependent' functions
+provider_name = 'Springer'                    #Changes output for the 'dependent' functions
 
 
 if __name__ == '__main__':
@@ -34,20 +34,21 @@ if __name__ == '__main__':
 #    jr1.jr1_jr5_big5_grouped_bar_chart() 
 #    jr1.jr1_jr5_other_providers_grouped_bar_chart()
 #        
-#    jr5.percent_jr5_of_jr1()
+    other.percent_jr5_of_jr1()
 #    other.journals_by_domain()
 #    other.journals_by_field()
 #
 #    other.journals_by_field_big5()
 #    other.journals_by_field_other_providers()
-    
-    
-    ###### DEPENDENT FUNCTIONS - dependent on provider_name ############
-    jr5.jr5_by_field_by_provider(provider_name)
-    jr1.jr1_by_field_by_provider(provider_name)
-    other.references_by_field_by_provider(provider_name)
-    other.publications_by_field_by_provider(provider_name)
-
+#    
+#    
+#    ###### DEPENDENT FUNCTIONS - dependent on provider_name ############
+#    jr5.jr5_by_field_by_provider(provider_name)
+#    jr1.jr1_by_field_by_provider(provider_name)
+#    other.references_by_field_by_provider(provider_name)
+#    other.publications_by_field_by_provider(provider_name)
+#    jr5.jr5_percent_field_by_provider(provider_name)
+#    jr1.jr1_percent_field_by_provider(provider_name)
 
 
 

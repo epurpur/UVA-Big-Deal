@@ -1,0 +1,352 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>uva big deal - progress report (June 17, 2019).md</title><style></style></head><body id="preview">
+<p>UVA Big Deal - 1Figr Data Progress Report (June 15, 2019)</p>
+<p>After our initial meetings with the collections department, a group of us in Research Data Services have met to discuss<br>
+next steps. I’ve been slicing and dicing the data to see what we are working with and to try and get a sense of the<br>
+meaningful data points which we can share with the collections team and eventually higher ups in order to make informed<br>
+collections decisions in the future. This is a living document and will be updated regularly (weekly). If you have questions, comments, suggestions, or criticisms about our processes please let me know! My contact is <a href="mailto:ep9k@virginia.edu">ep9k@virginia.edu</a></p>
+<p>Michele, Ricky, Jeremy and I (Erich) have been meeting weekly. In our initial explorations of the data, we have been working<br>
+specifically with the ‘1figr_U_Virginia_Test’ data file, and the ‘Journals Per Provider’ tab within that. ‘Journals Per Provider’ is basically a list of about 23,000 journals we subscribe to across different journal subscription platforms. Some of these providers are publishers, some are aggregators, some are a hybrid mix. We have been looking at journal use numbers, specifically the ‘Downloads JR1 2017’ and ‘Downloads JR5 2017 in 2017’ columns. As a reminder, JR1 data refers to downloads by journal in 2017 for articles published in any year. JR5 data refers to downloads by journal in 2017 for articles published in 2017. There is also information available about the provider for each journal, the domain each journal publishes in, the field of each journal (a sub-field of domain), information about # of UVA citations and publications for each journal, and so on.</p>
+<p>I’ve mostly been using python, a free and open source programming language to read and analyze the data, along with a very little bit of editing in excel itself. I will include the full code for the sake of reproducibility and openness. If you don’t care about the code, just look at the results (graphs). Let’s get to it!</p>
+<p>I’ll start with the JR1 data. I’ve broken the ‘Journals per Provider’ sheet of the 1figr_U_Virginia_test’ file off as a .csv of its own. To start, you’ll need to import the following libraries:</p>
+<pre><code>import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+</code></pre>
+<p>Now for the functions. Basically, I wrote a function for each graph. The function is a small chunk of code designed to do one thing and can be used many times, making the code extendible and reproducible. Each function has a documentation string explaining it, but I’ll provide additional explanation.</p>
+<p>Raw number of JR1 downloads by provider</p>
+<pre><code>def read_jr1():
+&quot;&quot;&quot;Make downloads 'JR1 2017' table. JR1 data is all downloads per provider for all years&quot;&quot;&quot;
+
+    data = pd.read_csv('Packages.csv', skiprows=8)
+    jr1_data_by_package = data.groupby(['Provider', 'Downloads JR1 2017'], as_index=False).sum().values.tolist()
+    jr1_packages = [x[0] for x in jr1_data_by_package]
+    jr1_totals = [x[1] for x in jr1_data_by_package]
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Downloads JR1 2017')
+    plt.barh(jr1_packages, jr1_totals, height=.8, color='green')
+    plt.grid()
+    plt.show()
+</code></pre>
+<p>Output:<br>
+<img src="https://www.dropbox.com/s/yeib8fs83g40gov/DownloadsJR12017.png?dl=0&amp;raw=1" alt="DownloadsJR12017.png"></p>
+<p>As you can see, Elsevier has many more downloads than the other providers, so I took that out of the data so it is easier to look at:</p>
+<p><img src="https://www.dropbox.com/s/nuuasunpwn64wjd/DownloadsJR12017NoElsevier.png?dl=0&amp;raw=1" alt="DownloadsJR12017NoElsevier.png"></p>
+<p>We are also interested in the Big 5 providers which are: Wiley, Taylor &amp; Francis, Springer, Sage, Elsevier. Here are the JR1 downloads for just the big 5.</p>
+<p><img src="https://www.dropbox.com/s/y7f35a7m2874ves/DownloadsJR12017Big5Providers.png?dl=0&amp;raw=1" alt="DownloadsJR12017Big5Providers.png"></p>
+<p>And here are JR1 downloads for all other providers outside the big 5.</p>
+<p><img src="https://www.dropbox.com/s/bvmwk3sj8j3pnmt/DownloadsJr12017NotBig5Providers.png?dl=0&amp;raw=1" alt="DownloadsJr12017NotBig5Providers.png"></p>
+<p>We will see more from the JR5 data shortly, but as we know, JR5 data is 2017 downloads in 2017. This chart basically gives us a look at what type of content people are using. Is it current content?  Or historical content? Here is a comparison of JR1 downloads vs. JR5 downloads for the big 5 providers. First the code:</p>
+<pre><code>def jr1_jr5_big5_grouped_bar_chart():
+&quot;&quot;&quot;Grouped bar chart showing comparison of jr5 vs jr1 downloads by provider in 2017 for the big 5 providers.
+Big 5 are: Elsevier, Wiley, Springer, Taylor &amp; Francis, Sage&quot;&quot;&quot; 
+
+    data = pd.read_csv('Packages.csv', skiprows=8)
+
+    jr5_data_by_package = data.groupby(['Provider', 'Downloads JR5 2017 in 2017'], as_index=False).sum().values.tolist()
+    jr1_data_by_package = data.groupby(['Provider', 'Downloads JR1 2017'], as_index=False).sum().values.tolist()
+
+    jr5_big5_data = []
+    jr1_big5_data = []
+
+    big5 = ['Elsevier', 'Wiley', 'Springer', 'Taylor &amp; Francis', 'Sage']
+    for i in jr5_data_by_package:
+        if i[0] in big5:
+            jr5_big5_data.append(i)
+
+    packages = [x[0] for x in jr1_big5_data]
+    jr1_totals = [x[1] for x in jr1_big5_data]
+    jr5_totals = [x[1] for x in jr5_big5_data]
+
+    bar_width = .25
+
+    #set position of bar on X axis
+    jr1_position = np.arange(len(jr1_totals))
+    jr5_position = [x + bar_width for x in jr1_position]
+
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('2017 downloads by Provider: JR1 vs. JR5')
+    plt.bar(jr1_position, jr1_totals, color='blue', width=bar_width, label='JR1 downloads')
+    plt.bar(jr5_position, jr5_totals, color='red', width=bar_width, label='JR5 downloads')
+    plt.xticks([r+bar_width for r in range(len(packages))], packages)
+    plt.xticks(rotation=90)
+    plt.legend()            #grabs the 'label' argument from plt.bar
+    plt.show()
+</code></pre>
+<p><img src="https://www.dropbox.com/s/uvw2qi7l045ia7s/2017DownloadsByProviderJR1vJR5Big5Providers.png?dl=0&amp;raw=1" alt="2017DownloadsByProviderJR1vJR5Big5Providers.png"></p>
+<p>Here is JR1 vs JR5 downloads for all other providers. Unfortunately, this is hard to look at.</p>
+<p><img src="https://www.dropbox.com/s/tdk2i2nuonzjhwf/2017DownloadsByProviderJR1vJR5NotBig5Providers.png?dl=0&amp;raw=1" alt="2017DownloadsByProviderJR1vJR5NotBig5Providers.png"></p>
+<p>Because it is hard to see what percent the JR5 downloads are of the JR1, here is the former in a graph. You can see the % of total downloads that JR5 comprise for each provider. The higher the %, the more interested users are in current data. For example, JSTOR provides mostly back issues of journals and this is reflected here with a very low ranking. The code first:</p>
+<pre><code>def percent_jr5_of_jr1():
+    &quot;&quot;&quot;Print list of providers, showing ratio of jr5 downloads as % of all downloads(jr1) in 2017&quot;&quot;&quot;
+
+    data = pd.read_csv('Packages.csv', skiprows=8)
+
+    jr5_data_by_package = data.groupby(['Provider', 'Downloads JR5 2017 in 2017'], as_index=False).sum().values.tolist()
+    jr1_data_by_package = data.groupby(['Provider', 'Downloads JR1 2017'], as_index=False).sum().values.tolist()
+
+    combined = list(zip(jr5_data_by_package, jr1_data_by_package))
+
+    final_rank = []
+
+    for i in combined:
+        provider_name = i[0][0]
+        jr5_downloads = i[0][1]
+        jr1_downloads = i[0][4]
+        final_rank.append((provider_name, round((jr5_downloads/jr1_downloads), 4)))   #round to 4 decimal places
+    
+    final_rank_sorted = tuple(sorted(final_rank, key=itemgetter(1), reverse=True))
+    provider = []
+    percent_count = []
+
+    for i in final_rank_sorted:
+        provider.append(i[0])
+        percent_count.append(i[1])
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Percent JR5 downloads of JR1 downloads')
+    plt.barh(provider, percent_count, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+</code></pre>
+<p><img src="https://www.dropbox.com/s/323ir44pmgwp8hx/PercentJR5ofJR1.png?dl=0&amp;raw=1" alt="PercentJR5ofJR1.png"></p>
+<p>Now I will change directions. Here, I am breaking the data apart by field for each provider. There are quite a few providers so I will be default choose Elsevier as my provider just as an example. This can (and should) be applied to every provider and we are not only examining Elsevier. But this can be applied to any of the 20+ providers. The code:</p>
+<pre><code>def jr1_by_field_by_provider(provider_name='Elsevier'):
+&quot;&quot;&quot;Charts JR1 downloads by field for chosen provider. User inputs provider name and dynamically generates chart for that provider&quot;&quot;&quot;
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+
+    for i in fields_data:
+        fields.append(i[0])
+
+    sums_by_field = subset_by_provider.groupby(['Field'])['Downloads JR1 2017'].sum()     #sum of downloads per field
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'JR1 Downloads by field for Provider: {provider_name}')
+    plt.barh(fields, sums_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show()    
+</code></pre>
+<p><img src="https://www.dropbox.com/s/1u798nh87ipciu3/JR1DownloadsByFieldElsevier.png?dl=0&amp;raw=1" alt="JR1DownloadsByFieldElsevier.png"></p>
+<p>And now the percent of JR1 downloads by field for Elsevier:<br>
+<img src="https://www.dropbox.com/s/c083a72p90ji9jc/PercentJR1DownloadsByFieldElsevier.png?dl=0&amp;raw=1" alt="PercentJR1DownloadsByFieldElsevier.png"></p>
+<pre><code>def jr1_percent_field_by_provider(provider_name='Elsevier'):
+&quot;&quot;&quot;Charts % of JR1 downloads by field for a given provider&quot;&quot;&quot;
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+ fields = []
+
+    for i in fields_data:
+        fields.append(i[0])
+    
+    sums_by_field = subset_by_provider.groupby(['Field'])['Downloads JR1 2017'].sum().tolist()     #sum of downloads per field
+
+    total_downloads = sum(sums_by_field)
+    
+    percent_by_field = [round((i/total_downloads), 4) for i in sums_by_field]
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Percent of total JR1 downloads by field for: {provider_name}')
+    plt.barh(fields, percent_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show()
+</code></pre>
+<p>Enough of the JR1 data, now lets look at JR5 numbers.</p>
+<p>First, Raw number of JR5 downloads in 2017:</p>
+<pre><code>def read_jr5():
+&quot;&quot;&quot;Make 'Downloads JR5 2017 in 2017' table. JR5 data is all downloads by provider of 2017 articles in 2017&quot;&quot;&quot;
+
+    data = pd.read_csv('Packages.csv', skiprows=8)
+
+    jr5_data_by_package = data.groupby(['Provider', 'Downloads JR5 2017 in 2017'], as_index=False).sum().values.tolist()
+
+    jr5_packages = [x[0] for x in jr5_data_by_package]
+    jr5_totals = [x[1] for x in jr5_data_by_package]
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Downloads JR5 2017 in 2017')
+    plt.barh(jr5_packages, jr5_totals, height=.8, color='green')
+    plt.grid()
+    plt.show()
+</code></pre>
+<p><img src="https://www.dropbox.com/s/lgjvfq9upffeglq/DownloadsJR52017in2017.png?dl=0&amp;raw=1" alt="DownloadsJR52017in2017.png"></p>
+<p>Now the same without Elsevier<br>
+<img src="https://www.dropbox.com/s/3z8ch7f3nie6peb/DownloadsJR52017in2017NoElsevier.png?dl=0&amp;raw=1" alt="DownloadsJR52017in2017NoElsevier.png"></p>
+<p>And JR5 downloads for just the Big 5 providers<br>
+<img src="https://www.dropbox.com/s/c3qq5c9xcb7i4lo/DownloadsJR52017in2017Big5Providers.png?dl=0&amp;raw=1" alt="DownloadsJR52017in2017Big5Providers.png"></p>
+<p>JR5 downloads for all providers other than the Big 5<br>
+<img src="https://www.dropbox.com/s/o742xr93w1em4po/DownloadsJR52017in2017NotBig5Providers.png?dl=0&amp;raw=1" alt="DownloadsJR52017in2017NotBig5Providers.png"></p>
+<p>Now, here are the JR5 downloads by field for Elsevier:</p>
+<pre><code>def jr5_by_field_by_provider(provider_name='Elsevier'):
+&quot;&quot;&quot;Charts JR5 downloads by field for chosen provider. User inputs provider name and dynamically generates chart for that provider&quot;&quot;&quot;
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+
+    for i in fields_data:
+        fields.append(i[0])
+
+    sums_by_field = subset_by_provider.groupby(['Field'])['Downloads JR5 2017 in 2017'].sum()     #sum of downloads per field
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'JR5 Downloads by field for Provider: {provider_name}')
+    plt.barh(fields, sums_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+</code></pre>
+<p><img src="https://www.dropbox.com/s/uob9pv854kd3wgw/JR5DownloadsbyFieldforproviderElsevier.png?dl=0&amp;raw=1" alt="JR5DownloadsbyFieldforproviderElsevier.png"></p>
+<p>And for JR5 downloads, the percent of downloads each field comprises for Elsevier</p>
+<pre><code>def jr5_percent_field_by_provider(provider_name='Elsevier'):
+&quot;&quot;&quot;Charts % of JR5 downloads by field for a given provider. This is in lieu of a stacked bar graph&quot;&quot;&quot;
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+
+    for i in fields_data:
+        fields.append(i[0])
+    
+    sums_by_field = subset_by_provider.groupby(['Field'])['Downloads JR5 2017 in 2017'].sum().tolist()     #sum of downloads per field
+
+    total_downloads = sum(sums_by_field)
+    
+    percent_by_field = [round((i/total_downloads), 4) for i in sums_by_field]
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Percent of total JR5 downloads by field for: {provider_name}')
+    plt.barh(fields, percent_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+</code></pre>
+<p><img src="https://www.dropbox.com/s/iplcf2wuesmclqm/PercentTotalJR5DownloadsbyFieldforElsevier.png?dl=0&amp;raw=1" alt="PercentTotalJR5DownloadsbyFieldforElsevier.png"></p>
+<p>Lastly are a few more figures that are not directly associated with JR1 or JR5 downloads.</p>
+<p>Number of journals published by domain</p>
+<pre><code>def journals_by_domain():
+&quot;&quot;&quot;Counting occurrences of downloads in each domain from JournalsPerPackage.csv&quot;&quot;&quot;
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    domains_list = data.Domain.tolist()
+
+    counted_domains = pd.Series(domains_list).value_counts().reset_index().values.tolist()
+
+    domains = [x[0] for x in counted_domains]
+    counts = [x[1] for x in counted_domains]
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Journals by Domain')
+    plt.barh(domains, counts, height=.8, color='green')
+    plt.grid()
+    plt.show()
+</code></pre>
+<p><img src="https://www.dropbox.com/s/747ozn3n28trj29/JournalsByDomain.png?dl=0&amp;raw=1" alt="JournalsByDomain.png"></p>
+<p>Number of Journals published by field</p>
+<pre><code>def journals_by_field():
+&quot;&quot;&quot;Counting occurrences of downloads in each field from JournalsPerPackage.csv&quot;&quot;&quot;
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    fields_list = data.Field.tolist()
+
+    counted_fields = pd.Series(fields_list).value_counts().reset_index().values.tolist()
+
+    fields = [x[0] for x in counted_fields]
+    counts = [x[1] for x in counted_fields]
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Journals by field')
+    plt.barh(fields, counts, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+</code></pre>
+<p><img src="https://www.dropbox.com/s/lnqbc0gl7fecavo/JournalsByField.png?dl=0&amp;raw=1" alt="JournalsByField.png"></p>
+<p>Journals published by the Big 5 Providers:<br>
+<img src="https://www.dropbox.com/s/zhtglh9pmvwwzpl/JournalsByFieldBig5.png?dl=0&amp;raw=1" alt="JournalsByFieldBig5.png"></p>
+<p>Journals published by all providers other than the Big 5<br>
+<img src="https://www.dropbox.com/s/42voh63wr5xgivd/JournalsByFieldNotBig5.png?dl=0&amp;raw=1" alt="JournalsByFieldNotBig5.png"></p>
+<p>References by field for Elsevier. This is defined as authors citing articles published by UVA authors.</p>
+<pre><code>def references_by_field_by_provider(provider_name):
+&quot;&quot;&quot;Charts references by field for chosen provider. User inputs provider name and dynamically generates chart for that provider&quot;&quot;&quot;
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+
+    for i in fields_data:
+        fields.append(i[0])
+
+    sums_by_field = subset_by_provider.groupby(['Field'])['References'].sum()     #sum of downloads per field
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'References by field for Provider: {provider_name}')
+    plt.barh(fields, sums_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show() 
+</code></pre>
+<p><img src="https://www.dropbox.com/s/s7muo72wbatud5e/ReferencesbyFieldElsevier.png?dl=0&amp;raw=1" alt="ReferencesbyFieldElsevier.png"></p>
+<p>Lastly, publications by field for Elsevier. These are articles published by UVA authors.</p>
+<pre><code>def publications_by_field_by_provider(provider_name):
+&quot;&quot;&quot;Charts publications by field for chosen provider. User inputs provider name and dynamically generates chart for that provider&quot;&quot;&quot;
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
+    fields = []
+
+    for i in fields_data:
+        fields.append(i[0])
+
+    sums_by_field = subset_by_provider.groupby(['Field'])['Papers'].sum()     #sum of downloads per field
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Publications by field for Provider: {provider_name}')
+    plt.barh(fields, sums_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show()
+</code></pre>
+<p><img src="https://www.dropbox.com/s/lgduw02p332yvki/PublicationsByFieldElsevier.png?dl=0&amp;raw=1" alt="PublicationsByFieldElsevier.png"></p>
+
+</body></html>
