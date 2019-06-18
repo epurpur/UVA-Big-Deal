@@ -173,3 +173,50 @@ def jr5_percent_field_by_provider(provider_name):
     plt.grid()
     plt.show() 
 
+
+def jr5_fluff_checker(provider_name):
+    """Checking for fluff in different providers. The hypothesis is that most packages provide a small number of 
+    highly used journals and the rest are fluff that we are paying for. We will look at individual titles per package
+    and see which of those make up 80% of the JR5 downloads"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)   
+    
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+    journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
+    journals_data.remove(journals_data[0])          #removing aggregator column data
+    
+    total_jr5_downloads = 0
+    total_journals = 0                         
+    for i in journals_data:
+        total_jr5_downloads += i[3]
+        total_journals += 1
+        
+    jr5_tuples = [(i[0], i[3]) for i in journals_data]
+    jr5_tuples_sorted = sorted(jr5_tuples, key = lambda x: x[1], reverse=True)       #sorts on second element of jr5_tuples
+    
+    running_tally = 0
+    highly_used_journals = []           #THIS HOLDS (JOURNAL NAME, JR5_DOWNLOADS)
+    for i in jr5_tuples_sorted:
+        if running_tally < (total_jr5_downloads * 0.8):
+            highly_used_journals.append(i)
+            running_tally += i[1]
+            
+#    print(highly_used_journals)
+    print(f"Total JR5 downloads for provider: {provider_name} = {total_jr5_downloads}")
+    print(f"{len(highly_used_journals)} of {total_journals} journals make up 80% of the use")
+    
+    fluff_index = ((len(highly_used_journals))/(total_journals))
+    print(f"Fluff index = {fluff_index}")
+    
+    if fluff_index < .20:
+        print("Yes, there is fluff!")
+    
+
+def jr5_chart_fluff_index():
+    """Use jr5_fluff_checker logic to chart fluff index of all providers for jr1 data"""
+    pass
+        
+jr5_fluff_checker('Elsevier')
+
+

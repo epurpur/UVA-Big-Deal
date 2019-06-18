@@ -208,14 +208,6 @@ def percent_jr5_of_jr1():
         provider.append(i[0])
         percent_count.append(i[1])
     
-#    publishers_list = ['AIP', 'American Chemical Society', 'American Institute of Aeronautics and Astronautics', 'American Mathematical Society', 'American Physical Society', 'American Psychological Association', 
-#                       'American Society of Civil Engineers', 'American Society of Mechanical Engineers', 'Annual Reviews', 'Association for Computing Machinery', 'BioOne', 'Brill', 'Cambridge UP', 'DeGruyter', 
-#                       'Elsevier', 'Emerald', 'IEEE', 'IOPscience', 'Karger', 'MIT Press', 'Modern Language Association', 'Oxford UP', 'Project MUSE', 'Royal Society of Chemistry', 'Sage', 'SPIE', 'Springer', 
-#                       'Taylor & Francis', 'U Chicago Press', 'Wiley']
-#    aggregators_list = ['Ebsco', 'Gale', 'ProQuest']
-#    hybrids_list = ['Ovid']
-#    archives_list = ['JSTOR']
-    
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
@@ -239,3 +231,9 @@ def percent_jr5_of_jr1():
     plt.show() 
     
 
+
+
+    
+    
+    
+    
