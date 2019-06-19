@@ -231,7 +231,7 @@ def percent_jr5_of_jr1():
     plt.show() 
     
 
-
+percent_jr5_of_jr1()
 
     
     
