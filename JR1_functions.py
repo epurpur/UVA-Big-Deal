@@ -371,7 +371,25 @@ def jr1_fluff_index():
     plt.show() 
         
 
-jr1_fluff_checker('Brill')
+def jr1_big5_fields():
+    """Looks at jr1 downloads by field for the big 5 providers. Charts % use by field for each of the big 5 providers,
+    with different shaded color for each provider"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
 
-jr1_fluff_index()
+    elsevier_subset = data.loc[data['Provider'] == 'Elsevier']
+    taylorfrancis_subset = data.loc[data['Provider'] == 'Taylor & Francis']
+    sage_subset = data.loc[data['Provider'] == 'Sage']
+    springer_subset = data.loc[data['Provider'] == 'Springer']
+    wiley_subset = data.loc[data['Provider'] == 'Wiley']
+    
+    big5_subset = [elsevier_subset, taylorfrancis_subset, sage_subset, springer_subset, wiley_subset]
+    
+
+#    subset_fields = subset.groupby(['Field'], as_index=False).sum().values.tolist()
+
+    
+
+    
+jr1_big5_fields()
 
