@@ -297,8 +297,8 @@ def jr1_fluff_checker(provider_name):
         print("Seems fluffy to me!")
         
         
-def jr1_fluff_index():
-    """Produces 'fluff index' value by provider for JR1 downloads and charts each provider and its corresponding fluff index.
+def jr1_fluff_score():
+    """Produces 'fluff score' value by provider for JR1 downloads and charts each provider and its corresponding fluff index.
     Fluff index is basically a ratio of highly used journals to total journals for each provider. We are checking to see if providers
     are including a bunch of unused journals in their offerings.
     Here is how fluff index is calculated:
@@ -354,7 +354,7 @@ def jr1_fluff_index():
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'JR1 Fluff Index by provider')
+    plt.suptitle(f'JR1 Fluff Score by provider')
     plot = plt.barh(providers, fluff_score, height=.8, color='green')
     
     plot[13].set_color('red')
@@ -371,25 +371,33 @@ def jr1_fluff_index():
     plt.show() 
         
 
-def jr1_big5_fields():
-    """Looks at jr1 downloads by field for the big 5 providers. Charts % use by field for each of the big 5 providers,
-    with different shaded color for each provider"""
+def jr1_big5_by_field(field_choice):
+    """Looks at jr1 downloads by field for the big 5 providers. Charts % use by field for each of the big 5 providers"""
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
 
-    elsevier_subset = data.loc[data['Provider'] == 'Elsevier']
-    taylorfrancis_subset = data.loc[data['Provider'] == 'Taylor & Francis']
-    sage_subset = data.loc[data['Provider'] == 'Sage']
-    springer_subset = data.loc[data['Provider'] == 'Springer']
-    wiley_subset = data.loc[data['Provider'] == 'Wiley']
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']
+
+    big5_data = []
+    for provider_name in big5:
+        provider_subset = data.loc[data['Provider'] == provider_name]
+        
+        provider_list = provider_subset.groupby(['Provider', 'Field'], as_index=False).sum().values.tolist()
+        for i in provider_list:
+            if i[1] == field_choice:
+                big5_data.append((i[0], i[1], i[3]))
+            
+
+    big5_packages = [x[0] for x in big5_data]
+    big5_total_by_field = [x[2] for x in big5_data]
     
-    big5_subset = [elsevier_subset, taylorfrancis_subset, sage_subset, springer_subset, wiley_subset]
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Big 5 Providers, JR1 downloads by field: {field_choice}')
+    plt.barh(big5_packages, big5_total_by_field, height=.8, color='green')
+    plt.grid()
+    plt.show()        
     
 
-#    subset_fields = subset.groupby(['Field'], as_index=False).sum().values.tolist()
-
-    
-
-    
-jr1_big5_fields()
 

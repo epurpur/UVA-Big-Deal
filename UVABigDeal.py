@@ -50,6 +50,10 @@ if __name__ == '__main__':
 #    jr5.jr5_percent_field_by_provider(provider_name)
 #    jr1.jr1_percent_field_by_provider(provider_name)
 
-
-
+    jr1.jr1_fluff_checker('Wiley')
+    jr1.jr1_fluff_score()
+    jr5.jr5_fluff_checker('Sage')
+    jr5.jr5_fluff_score()
+    jr1.jr1_big5_by_field('Engineering')
+    jr5.jr5_big5_by_field('Engineering')
 

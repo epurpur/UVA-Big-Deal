@@ -77,9 +77,9 @@ def journals_by_field_big5():
             big5_data.append(i)
             
     fields_only = [x[1] for x in big5_data]
-    
+
     counted_fields = pd.Series(fields_only).value_counts().reset_index().values.tolist()
-    
+
     fields = [x[0] for x in counted_fields]
     counts = [x[1] for x in counted_fields]
 
@@ -90,6 +90,8 @@ def journals_by_field_big5():
     plt.barh(fields, counts, height=.8, color='green')
     plt.grid()
     plt.show() 
+    
+    
     
 def journals_by_field_other_providers():
     """Counting occurences of downloads in each field from Journals Per Package.csv
@@ -230,8 +232,6 @@ def percent_jr5_of_jr1():
     plt.legend(handles=[publishers, aggregators, hybrids, archives], title='Provider Type')
     plt.show() 
     
-
-percent_jr5_of_jr1()
 
     
     
