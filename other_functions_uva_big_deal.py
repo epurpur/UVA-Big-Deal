@@ -231,9 +231,127 @@ def percent_jr5_of_jr1():
     plt.grid()
     plt.legend(handles=[publishers, aggregators, hybrids, archives], title='Provider Type')
     plt.show() 
+   
     
+def scopus_uva_publications_2017():
+    """Using Scopus data, computes total UVA publications vs total publications by provider. Data is only 2017 data."""
+    
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
 
+    providers = data.groupby(['Provider'], as_index=False).sum().values.tolist()
+    providers = [i[0] for i in providers]
+
+    all_provider_scores = []
     
+    for provider_name in providers:
+        
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+        papers_2017 = subset_by_provider.papers_2017.tolist()
+        papers_2017 = papers_2017[0]  #first number in list is sum of rest of numbers
+
+        total_2017 = subset_by_provider.total_2017.tolist()
+        total_2017 = total_2017[0]
+
+        provider_score = papers_2017/total_2017   
+        all_provider_scores.append((provider_name, provider_score))  #tie the provider_name and publisher score together
+
+    all_provider_scores = sorted(all_provider_scores, key=itemgetter(1), reverse=True)
+    
+    providers = [x[0] for x in all_provider_scores]
+    provider_score = [x[1] for x in all_provider_scores]
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8)) 
+    plt.suptitle('UVA publications as % of total publications (2017 Scopus Data)')
+    plot = plt.barh(providers, provider_score, height=.8, color='green')
+    
+    #red color for the big 5
+    plot[11].set_color('red')
+    plot[16].set_color('red')
+    plot[24].set_color('red')
+    plot[25].set_color('red')
+    plot[27].set_color('red')
+
+    #make custom plot legend
+    big5 = mpatches.Patch(color='red', label='Big 5 Provider')
+    
+    plt.grid()
+    plt.legend(handles=[big5])
+    plt.show()
+
+
+def scopus_uva_publications_all_years():
+    """Using Scopus data, computes total UVA publications vs total publications for all years by provider. Data is for a 10 year period (2008-2017)"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    providers = data.groupby(['Provider'], as_index=False).sum().values.tolist()
+    providers = [i[0] for i in providers]
+
+    all_provider_scores = []
+
+    for provider_name in providers:
+
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+        papers = subset_by_provider.Papers.tolist()
+        total_uva_publications = papers[0]   #first item in list is total # of publications for 10 year period of Scopus data
+
+        total_papers_scopus = []
+
+        total_2008 = subset_by_provider.total_2008.tolist()
+        total_papers_scopus.append(total_2008[0])
+        total_2009 = subset_by_provider.total_2009.tolist()
+        total_papers_scopus.append(total_2009[0])
+        total_2010 = subset_by_provider.total_2010.tolist()
+        total_papers_scopus.append(total_2010[0])
+        total_2011 = subset_by_provider.total_2011.tolist()
+        total_papers_scopus.append(total_2011[0])
+        total_2012 = subset_by_provider.total_2012.tolist()
+        total_papers_scopus.append(total_2012[0])
+        total_2013 = subset_by_provider.total_2013.tolist()
+        total_papers_scopus.append(total_2013[0])
+        total_2014 = subset_by_provider.total_2014.tolist()
+        total_papers_scopus.append(total_2014[0])
+        total_2015 = subset_by_provider.total_2015.tolist()
+        total_papers_scopus.append(total_2015[0])
+        total_2016 = subset_by_provider.total_2016.tolist()
+        total_papers_scopus.append(total_2016[0])
+        total_2017 = subset_by_provider.total_2017.tolist()
+        total_papers_scopus.append(total_2017[0])
+
+        grand_total = sum(total_papers_scopus)
+
+        provider_score = total_uva_publications/grand_total
+        all_provider_scores.append((provider_name, provider_score))  #tie the provider_name and publisher score together
+    
+    all_provider_scores = sorted(all_provider_scores, key=itemgetter(1), reverse=True)
+
+    providers = [x[0] for x in all_provider_scores]
+    provider_score = [x[1] for x in all_provider_scores]
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8)) 
+    plt.suptitle('UVA publications as % of total publications (2008-2017 All Years Scopus Data)')
+    plot = plt.barh(providers, provider_score, height=.8, color='green')
+    
+    #red color for the big 5
+    plot[13].set_color('red')
+    plot[21].set_color('red')
+    plot[27].set_color('red')
+    plot[28].set_color('red')
+    plot[29].set_color('red')
+
+    #make custom plot legend
+    big5 = mpatches.Patch(color='red', label='Big 5 Provider')
+    
+    plt.grid()
+    plt.legend(handles=[big5])
+    plt.show()
     
     
     

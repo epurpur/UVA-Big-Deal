@@ -290,10 +290,11 @@ def jr1_fluff_checker(provider_name):
     print(f"Total JR1 downloads for provider: {provider_name} = {total_jr1_downloads}")
     print(f"{len(highly_used_journals)} of {total_journals} journals make up 80% of the use")
     
-    fluff_index = ((len(highly_used_journals))/(total_journals))
-    print(f"Fluff index = {fluff_index}")
+    fluff_score = 1 - ((len(highly_used_journals))/(total_journals))
     
-    if fluff_index < .20:
+    print(f"Fluff score = {fluff_score}")
+    
+    if fluff_score > .80:
         print("Seems fluffy to me!")
         
         
@@ -341,9 +342,9 @@ def jr1_fluff_score():
                 highly_used_journals.append(i)
                 running_tally += i[1]
     
-        fluff_index = ((len(highly_used_journals))/(total_journals))
+        fluff_score = 1 - ((len(highly_used_journals))/(total_journals))
             
-        fluff_by_provider.append((provider_name, fluff_index))
+        fluff_by_provider.append((provider_name, fluff_score))
         
     fluff_by_provider = sorted(fluff_by_provider, key=itemgetter(1), reverse=True)    #sorting by fluff_index score
     
@@ -354,14 +355,15 @@ def jr1_fluff_score():
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'JR1 Fluff Score by provider')
+    plt.suptitle(f'JR1 Fluff Score by provider (% Fluff)')
     plot = plt.barh(providers, fluff_score, height=.8, color='green')
     
-    plot[13].set_color('red')
-    plot[22].set_color('red')
-    plot[23].set_color('red')
-    plot[26].set_color('red')
-    plot[31].set_color('red')
+    plot[3].set_color('red')
+    plot[8].set_color('red')
+    plot[11].set_color('red')
+    plot[12].set_color('red')
+    plot[21].set_color('red')
+
     
     #make custom plot legend
     big5 = mpatches.Patch(color='red', label='Big 5 Provider')
@@ -399,5 +401,7 @@ def jr1_big5_by_field(field_choice):
     plt.grid()
     plt.show()        
     
+    
+
 
 
