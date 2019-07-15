@@ -250,11 +250,17 @@ def scopus_uva_publications_2017():
 
         papers_2017 = subset_by_provider.papers_2017.tolist()
         papers_2017 = papers_2017[0]  #first number in list is sum of rest of numbers
-
+        if papers_2017 == 0:
+            papers_2017 = 0.01              #to avoid 'divide by 0' error
+        
+        
         total_2017 = subset_by_provider.total_2017.tolist()
         total_2017 = total_2017[0]
-
+        if total_2017 == 0:
+            total_2017 = 0.01               #to avoid 'divide by 0' error
+        
         provider_score = papers_2017/total_2017   
+
         all_provider_scores.append((provider_name, provider_score))  #tie the provider_name and publisher score together
 
     all_provider_scores = sorted(all_provider_scores, key=itemgetter(1), reverse=True)

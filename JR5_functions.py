@@ -121,7 +121,7 @@ def jr5_by_field_by_provider(provider_name):
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
     subset_by_provider = data.loc[data['Provider'] == provider_name]
-    
+#    
     fields_data = subset_by_provider.groupby(['Field'], as_index=False).sum().values.tolist()
     fields = []
  

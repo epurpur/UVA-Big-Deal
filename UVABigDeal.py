@@ -33,7 +33,7 @@ if __name__ == '__main__':
 #
 #    jr1.jr1_jr5_big5_grouped_bar_chart() 
 #    jr1.jr1_jr5_other_providers_grouped_bar_chart()
-#        
+#       
 #    other.percent_jr5_of_jr1()
 #    other.journals_by_domain()
 #    other.journals_by_field()
@@ -52,12 +52,25 @@ if __name__ == '__main__':
     
     
 #    jr1.jr1_fluff_checker('Springer')
-    jr1.jr1_fluff_score()
+#    jr1.jr1_fluff_score()
 #    jr1.jr1_big5_by_field('Engineering')
-#    jr5.jr5_big5_by_field('Engineering')
-    
-    other.scopus_uva_publications_2017()    
-    other.scopus_uva_publications_all_years()
+#    jr5.jr5_big5_by_field('Engineering') #(What e)
 
+#    other.scopus_uva_publications_2017()    
+#    other.scopus_uva_publications_all_years()
+    
+    
+    
+####FOR GROUP PRESENTATION 7/16#####
+    
+    jr1.jr1_fluff_score()               #change name of function!
+    jr1.jr1_fluff_score_inverse()       #change name of function!  Contains list of provider w/ JR80 numbers
+    other.percent_jr5_of_jr1()
+    jr5.jr5_by_field_by_provider('Springer')
+    jr5.jr5_by_field_by_provider('Sage')
+    jr5.jr5_by_field_by_provider('Elsevier')
+    jr5.jr5_by_field_by_provider('Wiley')
+    jr5.jr5_by_field_by_provider('Taylor & Francis')
+    other.scopus_uva_publications_2017()
     
 
