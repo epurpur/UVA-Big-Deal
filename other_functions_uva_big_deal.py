@@ -250,15 +250,15 @@ def scopus_uva_publications_2017():
 
         papers_2017 = subset_by_provider.papers_2017.tolist()
         papers_2017 = papers_2017[0]  #first number in list is sum of rest of numbers
-        if papers_2017 == 0:
-            papers_2017 = 0.01              #to avoid 'divide by 0' error
+             #to avoid 'divide by 0' error
         
         
         total_2017 = subset_by_provider.total_2017.tolist()
         total_2017 = total_2017[0]
-        if total_2017 == 0:
-            total_2017 = 0.01               #to avoid 'divide by 0' error
+        if total_2017 is 0:
+            total_2017 = 0.1               #to avoid 'divide by 0' error
         
+        print(f"{provider_name} : {papers_2017} of {total_2017} papers are UVA publications in 2017" )
         provider_score = papers_2017/total_2017   
 
         all_provider_scores.append((provider_name, provider_score))  #tie the provider_name and publisher score together
@@ -275,11 +275,11 @@ def scopus_uva_publications_2017():
     plot = plt.barh(providers, provider_score, height=.8, color='green')
     
     #red color for the big 5
+    plot[8].set_color('red')
     plot[11].set_color('red')
+    plot[12].set_color('red')
     plot[16].set_color('red')
-    plot[24].set_color('red')
-    plot[25].set_color('red')
-    plot[27].set_color('red')
+    plot[18].set_color('red')
 
     #make custom plot legend
     big5 = mpatches.Patch(color='red', label='Big 5 Provider')

@@ -355,14 +355,14 @@ def jr1_fluff_score():
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'JR80 Score by provider (JR1 downloads)')
+    plt.suptitle(f'Not-JR80 Score by provider (JR1 downloads)')
     plot = plt.barh(providers, fluff_score, height=.8, color='green')
     
-    plot[7].set_color('red')
-    plot[9].set_color('red')
+    plot[3].set_color('red')
+    plot[8].set_color('red')
     plot[11].set_color('red')
-    plot[18].set_color('red')
-    plot[19].set_color('red')
+    plot[12].set_color('red')
+    plot[21].set_color('red')
 
     
     #make custom plot legend
@@ -432,14 +432,14 @@ def jr1_fluff_score_inverse():
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'Not-JR80 Score by provider (JR1 downloads)')
+    plt.suptitle(f'JR80 Score by provider (JR1 downloads)')
     plot = plt.barh(providers, fluff_score, height=.8, color='green')
     
-    plot[7].set_color('red')
-    plot[9].set_color('red')
-    plot[11].set_color('red')
-    plot[18].set_color('red')
-    plot[19].set_color('red')
+    plot[13].set_color('red')
+    plot[22].set_color('red')
+    plot[23].set_color('red')
+    plot[26].set_color('red')
+    plot[31].set_color('red')
 
     
     #make custom plot legend
