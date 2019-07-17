@@ -298,17 +298,19 @@ def jr1_fluff_checker(provider_name):
         print("Seems fluffy to me!")
         
         
-def jr1_fluff_score():
-    """Produces 'fluff score' value by provider for JR1 downloads and charts each provider and its corresponding fluff index.
-    Fluff index is basically a ratio of highly used journals to total journals for each provider. We are checking to see if providers
-    are including a bunch of unused journals in their offerings.
-    Here is how fluff index is calculated:
+def jr1_not_jr80_value():
+    """Produces 'Not-JR80' value by provider for JR1 downloads and charts each provider and its corresponding Not-JR80 value.
+    This is the inverse of the JR80 value.
+    JR80 is defined as: "Journals representing 80% of downloads for their respective provider"
+    Not-JR80 score is basically the rest of the journals that do not represent 80% of the use. 
+    Here is how Not-JR80 score is calculated:
         - Reads data for each provider individually
         - Finds total number of JR1 downloads
         - Sorts individual jornals by provider in order of number of downloads
         - Counts jr1 download values until count surpasses 80% of total jr1 downloads
-        - Calculates fluff score as number of journals required to reach 80% / total journals by provider
-        - Charts fluff index of all providers, with Big 5 in red"""
+        - Calculates JR80 score as number of journals required to reach 80% / total journals by provider
+        - Then takes 1 - this number to get the not_jr80 score. 
+        - Charts not-JR80 score of all providers, with Big 5 in red"""
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
 
@@ -373,17 +375,16 @@ def jr1_fluff_score():
     plt.show() 
         
     
-def jr1_fluff_score_inverse():
-    """Produces 'fluff score' value by provider for JR1 downloads and charts each provider and its corresponding fluff index.
-    Fluff index is basically a ratio of highly used journals to total journals for each provider. We are checking to see if providers
-    are including a bunch of unused journals in their offerings.
-    Here is how fluff index is calculated:
+def jr1_jr80_value():
+    """Produces 'JR80' value by provider for JR1 downloads and charts each provider and its corresponding JR80 value.
+    JR80 is defined as: "Journals representing 80% of downloads for their respective provider"
+    Here is how JR80 score is calculated:
         - Reads data for each provider individually
         - Finds total number of JR1 downloads
         - Sorts individual jornals by provider in order of number of downloads
         - Counts jr1 download values until count surpasses 80% of total jr1 downloads
-        - Calculates fluff score as number of journals required to reach 80% / total journals by provider
-        - Charts fluff index of all providers, with Big 5 in red"""
+        - Calculates JR80 score as number of journals required to reach 80% / total journals by provider
+        - Charts JR80 score of all providers, with Big 5 in red"""
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
 
@@ -418,7 +419,7 @@ def jr1_fluff_score_inverse():
                 running_tally += i[1]
     
         fluff_score = (len(highly_used_journals))/(total_journals)
-        print(f"{provider_name} : {len(highly_used_journals)} of {total_journals} are JR80 journals")
+#        print(f"{provider_name} : {len(highly_used_journals)} of {total_journals} are JR80 journals")    #used to print each provider with number of journals included
             
         fluff_by_provider.append((provider_name, fluff_score))
         
@@ -449,6 +450,72 @@ def jr1_fluff_score_inverse():
     plt.legend(handles=[big5])
     plt.show() 
     
+    
+    
+def jr1_jr80_big5_value():
+    """Produces 'JR80' value by provider for JR1 downloads and charts each provider and its corresponding JR80 value.
+    Only for Big 5 providers.
+    JR80 is defined as: "Journals representing 80% of downloads for their respective provider"
+    Here is how JR80 score is calculated:
+        - Reads data for each provider individually
+        - Finds total number of JR1 downloads
+        - Sorts individual jornals by provider in order of number of downloads
+        - Counts jr1 download values until count surpasses 80% of total jr1 downloads
+        - Calculates JR80 score as number of journals required to reach 80% / total journals by provider
+        - Charts JR80 score of all providers, with Big 5 in red"""
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']
+    
+    fluff_by_provider = []
+    
+    for provider_name in big5:
+        
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+        
+        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
+        for i in journals_data:
+            if i[0] == provider_name:
+                journals_data.remove(i)                 #removing aggregator column data
+        
+        total_jr1_downloads = 0
+        total_journals = 0                         
+        for i in journals_data:
+            total_jr1_downloads += i[2]
+            total_journals += 1
+
+        jr1_tuples = [(i[0], i[2]) for i in journals_data]
+        jr1_tuples_sorted = sorted(jr1_tuples, key = lambda i: i[1], reverse=True)       #sorts on second element of jr1_tuples
+
+        running_tally = 0
+        highly_used_journals = []           #THIS HOLDS (JOURNAL NAME, JR5_DOWNLOADS)
+        for i in jr1_tuples_sorted:
+            if running_tally < (total_jr1_downloads * 0.8):
+                highly_used_journals.append(i)
+                running_tally += i[1]
+    
+        fluff_score = (len(highly_used_journals))/(total_journals)
+        print(f"{provider_name} : {len(highly_used_journals)} of {total_journals} are JR80 journals")    #used to print each provider with number of journals included
+            
+        fluff_by_provider.append((provider_name, fluff_score))
+       
+    fluff_by_provider = sorted(fluff_by_provider, key=itemgetter(1), reverse=True)    #sorting by fluff_index score
+    
+    providers = [x[0] for x in fluff_by_provider]
+    fluff_score = [x[1] for x in fluff_by_provider]
+    
+    #plot results
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'JR80 Score by provider (JR1 downloads)')
+    plt.barh(providers, fluff_score, height=.8, color='green')
+
+    
+
+jr1_jr80_big5_value()
+
 
 def jr1_big5_by_field(field_choice):
     """Looks at jr1 downloads by field for the big 5 providers. Charts % use by field for each of the big 5 providers"""
