@@ -452,7 +452,7 @@ def jr1_jr80_value():
     
     
     
-def jr1_jr80_big5_value():
+def jr1_jr80_big5_downloads():
     """Produces 'JR80' value by provider for JR1 downloads and charts each provider and its corresponding JR80 value.
     Only for Big 5 providers.
     JR80 is defined as: "Journals representing 80% of downloads for their respective provider"
@@ -509,12 +509,92 @@ def jr1_jr80_big5_value():
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'JR80 Score by provider (JR1 downloads)')
-    plt.barh(providers, fluff_score, height=.8, color='green')
-
+    plt.suptitle(f'Percentage of Titles Which Make 80% of JR1 Downloads \n (JR80 Score by Provider)')
+    plot = plt.barh(providers, fluff_score, height=.8, color='green')
+    
+    for i in plot:
+        score = i.get_width()
+        score = round(score, 4)
+        
+        plt.text(i.get_width() - .02, 
+                 i.get_y() + .35,
+                 '{:.2%}'.format(score),   #formats score as percentage
+                 ha='center',
+                 va='center')
     
 
-jr1_jr80_big5_value()
+def jr1_jr80_big5_citations():
+    """Gets number of citations for each of the big 5 providers.
+    Citations are measured as publications that have cited a UVA-authored article"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']    
+
+    references_by_provider = []
+    
+    for provider_name in big5:
+        
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
+        for i in journals_data:
+            if i[0] == provider_name:
+                total_references = i[4]
+                references_by_provider.append(total_references)
+                
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Citations by Provider \n (# of UVA Authored Papers Cited)')
+    plot = plt.barh(big5, references_by_provider, height=.8, color='green')
+    
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() - 5500,          #sets x axis position of labels
+                 i.get_y() + .35,
+                 score,
+                 ha='center',
+                 va='center')
+
+
+def jr1_jr80_big5_publications():
+    """Gets number of papers/publications for each of big 5 providers.
+    Publications are measured as papers with at least one UVA author"""
+    
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']    
+#    big5 = ['AIP', 'American Chemical Society']
+    publications_by_provider = []
+    
+    for provider_name in big5:
+        
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
+        for i in journals_data:
+            if i[0] == provider_name:
+                total_publications = i[5]
+                publications_by_provider.append(total_publications)
+                
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Publications by Provider \n (# of UVA Authored Papers Published)')
+    plot = plt.barh(big5, publications_by_provider, height=.8, color='green')
+    
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() - 275,           #sets x axis position of labels
+                 i.get_y() + .35,
+                 score,
+                 ha='center',
+                 va='center')
+        
 
 
 def jr1_big5_by_field(field_choice):
