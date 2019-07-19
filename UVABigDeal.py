@@ -51,9 +51,15 @@ if __name__ == '__main__':
     
     
     
-####FOR GROUP PRESENTATION 7/16#####
+####FOR VRL meeting 8/5#####
     
-    jr1.jr1_not_jr80_value()
-    jr1.jr1_jr80_value()
+    jr1.jr1_jr80_big5_downloads()
+    jr1.jr1_jr80_big5_citations()
+    jr1.jr1_jr80_big5_publications()
+    other.big5_percent_jr5_of_jr1()
+    
+    jr1.jr1_downloads_by_discipline('Elsevier')
+    other.citations_by_discipline('Elsevier')
+    other.publications_by_discipline('Elsevier')
 
 

@@ -625,7 +625,41 @@ def jr1_big5_by_field(field_choice):
     plt.grid()
     plt.show()        
     
+
+def jr1_downloads_by_discipline(provider_name):
+    """Shows distribution of JR1 downloads by discipline for the specified provider.
+    'Disciplines' is a column we derived from the pre-existing 'fields' column in the 1figr data.
+    Disciplines has mapped those field categories into more UVA specific language"""
     
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
+
+    disciplines = []
+    jr1_totals = []
+    
+    for i in disciplines_data:
+        discipline_name = i[0]
+        disciplines.append(discipline_name)
+        discipline_jr1_downloads = i[2]
+        jr1_totals.append(int(discipline_jr1_downloads))      #int() to remove decimal points
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Distribution of JR1 downloads by Discipline for Provider: {provider_name} \n (Disciplines are specific to UVA)')
+    plot = plt.barh(disciplines, jr1_totals, height=.8, color='green')    
+        
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() + 20500,           #sets x axis position of labels
+                 i.get_y() + .35,
+                 score,
+                 ha='center',
+                 va='center') 
 
 
 

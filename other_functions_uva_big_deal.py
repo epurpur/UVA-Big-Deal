@@ -233,6 +233,48 @@ def percent_jr5_of_jr1():
     plt.show() 
    
     
+def big5_percent_jr5_of_jr1():
+    """A measurement of currency. Compares JR5 downloads to JR1 downloads for each of the big 5 providers.
+    JR5 downloads are 2017 articles downloaded in 2017.
+    JR1 downloads are all years articles downloaded in 2017.
+    We want to see what % of current articles people are downloading."""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']    
+#    big5 = ['AIP', 'American Chemical Society']
+    
+    percent_jr5_of_jr1 = []
+    
+    for provider_name in big5:
+        
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
+        
+        for i in journals_data:
+            if i[0] == provider_name:
+                jr1_total = i[2]
+                jr5_total = i[3]
+                ratio = jr5_total/jr1_total
+                percent_jr5_of_jr1.append(ratio)
+                
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Percent JR5 downloads of JR1 downloads \n (Measures currency of article use)')
+    plot = plt.barh(big5, percent_jr5_of_jr1, height=.8, color='green')    
+        
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() - .0175,           #sets x axis position of labels
+                 i.get_y() + .35,
+                 '{:.2%}'.format(score),
+                 ha='center',
+                 va='center') 
+        
+    
 def scopus_uva_publications_2017():
     """Using Scopus data, computes total UVA publications vs total publications by provider. Data is only 2017 data."""
     
@@ -359,5 +401,82 @@ def scopus_uva_publications_all_years():
     plt.legend(handles=[big5])
     plt.show()
     
+   
+def citations_by_discipline(provider_name):
+    """Shows distribution of citations by discipline for the specified provider.
+    Citations are a reference to any paper authored by a UVA affiliated author.
+    However, if multiple UVA authors collaborate on one paper, this counts for only one citation.
+    'Disciplines' is a column we derived from the pre-existing 'fields' column in the 1figr data.
+    Disciplines has mapped those field categories into more UVA specific language"""
     
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
+
+    disciplines = []
+    citation_totals = []
+    
+    for i in disciplines_data:
+        discipline_name = i[0]
+        disciplines.append(discipline_name)
+        discipline_citations = i[4]
+        citation_totals.append(discipline_citations)      #int() to remove decimal points
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Distribution of Citations by Discipline for Provider: {provider_name} \n (Disciplines are specific to UVA)')
+    plot = plt.barh(disciplines, citation_totals, height=.8, color='green')    
+        
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() + 2300,           #sets x axis position of labels
+                 i.get_y() + .35,
+                 score,
+                 ha='center',
+                 va='center')
+
+
+def publications_by_discipline(provider_name):
+    """Shows distribution of publications by discipline for the specified provider.
+    Publications are publications by any UVA affiliated author.
+    However if multiple UVA authors collaborate on one paper, this counts for only one publication.
+    'Disciplines' is a column we derived from the pre-existing 'fields' column in the 1figr data.
+    Disciplines has mapped those field categories into more UVA specific language"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
+
+    disciplines = []
+    publication_totals = []
+    
+    for i in disciplines_data:
+        discipline_name = i[0]
+        disciplines.append(discipline_name)
+        discipline_publications = i[5]
+        publication_totals.append(discipline_publications)      #int() to remove decimal points
+
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Distribution of Publications by Discipline for Provider: {provider_name} \n (Disciplines are specific to UVA)')
+    plot = plt.barh(disciplines, publication_totals, height=.8, color='green')    
+        
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() + 90,           #sets x axis position of labels
+                 i.get_y() + .35,
+                 score,
+                 ha='center',
+                 va='center') 
+
+
+
+
