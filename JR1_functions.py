@@ -477,7 +477,7 @@ def jr1_jr80_big5_downloads():
         journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
         for i in journals_data:
             if i[0] == provider_name:
-                journals_data.remove(i)                 #removing aggregator column data
+                journals_data.remove(i)                 #removing aggregator column data                
         
         total_jr1_downloads = 0
         total_journals = 0                         
