@@ -14,6 +14,7 @@ JournalsPerProvider.csv"""
 import JR1_functions as jr1
 import JR5_functions as jr5
 import other_functions_uva_big_deal as other
+import vrl_presentation_functions as vrl
     
 
 provider_name = 'Springer'                    #Changes output for the 'dependent' functions
@@ -52,14 +53,10 @@ if __name__ == '__main__':
     
     
 ####FOR VRL meeting 8/5#####
-    
-    jr1.jr1_jr80_big5_downloads()
-    jr1.jr1_jr80_big5_citations()
-    jr1.jr1_jr80_big5_publications()
-    other.big5_percent_jr5_of_jr1()
-    
-    jr1.jr1_downloads_by_discipline('Elsevier')
-    other.citations_by_discipline('Elsevier')
-    other.publications_by_discipline('Elsevier')
 
+    vrl.big5_ref80_references()
+    vrl.big5_pap80_papers()  
+    vrl.uva_publications_over_time()
+    vrl.oa_percent_papers_available_over_time()
+    vrl.oa_number_papers_available_over_time()
 
