@@ -373,7 +373,8 @@ def jr1_not_jr80_value():
     plt.grid()
     plt.legend(handles=[big5])
     plt.show() 
-        
+
+
     
 def jr1_jr80_value():
     """Produces 'JR80' value by provider for JR1 downloads and charts each provider and its corresponding JR80 value.
@@ -449,7 +450,6 @@ def jr1_jr80_value():
     plt.grid()
     plt.legend(handles=[big5])
     plt.show() 
-    
     
     
 def jr1_jr80_big5_downloads():

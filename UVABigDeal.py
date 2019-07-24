@@ -17,9 +17,6 @@ import other_functions_uva_big_deal as other
 import vrl_presentation_functions as vrl
     
 
-provider_name = 'Springer'                    #Changes output for the 'dependent' functions
-
-
 if __name__ == '__main__':
 
 #    jr5.read_jr5()
@@ -54,9 +51,12 @@ if __name__ == '__main__':
     
 ####FOR VRL meeting 8/5#####
 
-    vrl.big5_ref80_references()
-    vrl.big5_pap80_papers()  
-    vrl.uva_publications_over_time()
-    vrl.oa_percent_papers_available_over_time()
-    vrl.oa_number_papers_available_over_time()
+    vrl.big5_jr80_jr1_downloads()
+    vrl.big5_jr80_jr5_downloads()
+#    vrl.big5_ref80_references()
+#    vrl.big5_pap80_papers()  
+#    vrl.number_uva_papers_over_time()
+#    vrl.percent_uva_papers_over_time()
+#    vrl.oa_percent_papers_available_over_time()
+#    vrl.oa_number_papers_available_over_time()
 
