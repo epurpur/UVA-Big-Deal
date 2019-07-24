@@ -92,6 +92,156 @@ def big5_jr80_jr1_downloads():
     plt.show()
 
 
+def big5_jr90_jr1_downloads():
+    """Produces 'JR90' value by provider for JR1 downloads and charts each provider and its corresponding JR90 value.
+    JR90 is defined as: "Journals representing 90% of downloads for their respective provider"
+    Here is how JR90 score is calculated:
+        - Cleaned 'N/A' values from 'JR1..' column to remove no data values     #NEED TO FIX THIS LATER
+        - Reads data for each provider individually
+        - Finds total number of JR1 downloads
+        - Sorts individual jornals by provider in order of number of downloads
+        - Counts jr1 download values until count surpasses 90% of total jr1 downloads
+        - Calculates JR90 score as number of journals required to reach 90% / total journals by provider
+        - Plots JR90 score of all providers"""
+
+    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
+
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']  
+
+    jr90_by_provider = []
+    plot_stats_by_provider = []                         #used later for labels in plot
+
+    for provider_name in big5:
+        
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
+    
+        for i in journals_data:
+            if i[0] == provider_name:
+                journals_data.remove(i)                 #removing aggregator column data
+
+        total_jr1_downloads = 0
+        total_journals = 0                         
+        for i in journals_data:
+            total_jr1_downloads += i[2]
+            total_journals += 1
+        
+        jr1_tuples = [(i[0], i[2]) for i in journals_data]
+        jr1_tuples_sorted = sorted(jr1_tuples, key = lambda i: i[1], reverse=True)       #sorts on second element of jr1_tuples
+
+        running_tally = 0
+        highly_used_journals = []           #THIS HOLDS (JOURNAL NAME, JR1_DOWNLOADS)
+        for i in jr1_tuples_sorted:
+            if running_tally < (total_jr1_downloads * 0.9):
+                highly_used_journals.append(i)
+                running_tally += i[1]
+                
+        jr90_score = (len(highly_used_journals))/(total_journals)
+#        print(f"{provider_name} : {len(highly_used_journals)} of {total_journals} are JR90 journals")    #used to print each provider with number of journals included
+                
+        jr90_by_provider.append((provider_name, jr90_score))
+        plot_stats_by_provider.append((provider_name, jr90_score, f'{len(highly_used_journals)}/{total_journals}'))
+        
+    jr90_by_provider = sorted(jr90_by_provider, key=itemgetter(1), reverse=True)
+    plot_stats_by_provider = sorted(plot_stats_by_provider, key=itemgetter(1), reverse=True)     #sorting to match order of jr80_scores
+    
+    
+    providers = [x[0] for x in jr90_by_provider]
+    jr90_value = [x[1] for x in jr90_by_provider]
+    plot_stats = [x[2] for x in plot_stats_by_provider]   #this is used for labels in final plot
+
+    plt.figure(num=None, figsize=(10, 10))
+    plt.suptitle(f'Percentage JR90 Titles by Provider \n(# Journals from all years downloaded in 2017 which account for 90% of use)')
+
+    plot = plt.barh(providers, jr90_value, height=.8, color='green')
+    
+    element_number = 0
+    for i in plot:
+        plt.text(i.get_width() - .022,
+                 i.get_y() + .35,
+                 plot_stats[element_number],
+                 ha='center',
+                 va='center')
+        element_number += 1
+        
+    plt.show()
+
+
+def big5_jr95_jr1_downloads():
+    """Produces 'JR95' value by provider for JR1 downloads and charts each provider and its corresponding JR95 value.
+    JR95 is defined as: "Journals representing 95% of downloads for their respective provider"
+    Here is how JR95 score is calculated:
+        - Cleaned 'N/A' values from 'JR1..' column to remove no data values     #NEED TO FIX THIS LATER
+        - Reads data for each provider individually
+        - Finds total number of JR1 downloads
+        - Sorts individual jornals by provider in order of number of downloads
+        - Counts jr1 download values until count surpasses 95% of total jr1 downloads
+        - Calculates JR95 score as number of journals required to reach 95% / total journals by provider
+        - Plots JR95 score of all providers"""
+
+    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
+
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']  
+
+    jr95_by_provider = []
+    plot_stats_by_provider = []                         #used later for labels in plot
+
+    for provider_name in big5:
+        
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
+    
+        for i in journals_data:
+            if i[0] == provider_name:
+                journals_data.remove(i)                 #removing aggregator column data
+
+        total_jr1_downloads = 0
+        total_journals = 0                         
+        for i in journals_data:
+            total_jr1_downloads += i[2]
+            total_journals += 1
+        
+        jr1_tuples = [(i[0], i[2]) for i in journals_data]
+        jr1_tuples_sorted = sorted(jr1_tuples, key = lambda i: i[1], reverse=True)       #sorts on second element of jr1_tuples
+
+        running_tally = 0
+        highly_used_journals = []           #THIS HOLDS (JOURNAL NAME, JR1_DOWNLOADS)
+        for i in jr1_tuples_sorted:
+            if running_tally < (total_jr1_downloads * 0.95):
+                highly_used_journals.append(i)
+                running_tally += i[1]
+                
+        jr95_score = (len(highly_used_journals))/(total_journals)
+#        print(f"{provider_name} : {len(highly_used_journals)} of {total_journals} are JR95 journals")    #used to print each provider with number of journals included
+                
+        jr95_by_provider.append((provider_name, jr95_score))
+        plot_stats_by_provider.append((provider_name, jr95_score, f'{len(highly_used_journals)}/{total_journals}'))
+        
+    jr95_by_provider = sorted(jr95_by_provider, key=itemgetter(1), reverse=True)
+    plot_stats_by_provider = sorted(plot_stats_by_provider, key=itemgetter(1), reverse=True)     #sorting to match order of jr80_scores
+    
+    
+    providers = [x[0] for x in jr95_by_provider]
+    jr95_value = [x[1] for x in jr95_by_provider]
+    plot_stats = [x[2] for x in plot_stats_by_provider]   #this is used for labels in final plot
+
+    plt.figure(num=None, figsize=(10, 10))
+    plt.suptitle(f'Percentage JR95 Titles by Provider \n(# Journals from all years downloaded in 2017 which account for 95% of use)')
+
+    plot = plt.barh(providers, jr95_value, height=.8, color='green')
+    
+    element_number = 0
+    for i in plot:
+        plt.text(i.get_width() - .035,
+                 i.get_y() + .35,
+                 plot_stats[element_number],
+                 ha='center',
+                 va='center')
+        element_number += 1
+        
+    plt.show()
+
+
 def big5_jr80_jr5_downloads():
     """Produces 'JR80' value by provider for JR5 downloads and charts each provider and its corresponding JR80 value.
     JR80 is defined as: "Journals representing 80% of downloads for their respective provider"
@@ -432,9 +582,6 @@ def percent_uva_papers_over_time():
     plt.legend()
 
 
-
-
-
 def oa_percent_papers_available_over_time():
     """Percent of papers available Open Access (oa) for each of the big 5 providers over time (2008-2017)
     Looks at columns under '% of OA papers in 1findr per journal/provider (intersection with Scopus)"""
@@ -545,6 +692,130 @@ def oa_number_papers_available_over_time():
     plt.legend()
     
 
+def big5_percent_jr5_of_jr1():
+    """A measurement of currency. Compares JR5 downloads to JR1 downloads for each of the big 5 providers.
+    JR5 downloads are 2017 articles downloaded in 2017.
+    JR1 downloads are all years articles downloaded in 2017.
+    We want to see what % of current articles people are downloading."""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']    
+#    big5 = ['AIP', 'American Chemical Society']
+    
+    percent_jr5_of_jr1 = []
+    
+    for provider_name in big5:
+        
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
+        
+        for i in journals_data:
+            if i[0] == provider_name:
+                jr1_total = i[2]
+                jr5_total = i[3]
+                ratio = jr5_total/jr1_total
+                percent_jr5_of_jr1.append(ratio)
+                
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Percent JR5 downloads of JR1 downloads \n (Measures currency of article use)')
+    plot = plt.barh(big5, percent_jr5_of_jr1, height=.8, color='green')    
+        
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() - .0175,           #sets x axis position of labels
+                 i.get_y() + .35,
+                 '{:.2%}'.format(score),
+                 ha='center',
+                 va='center') 
     
     
+def number_oa_papers_by_discipline(provider_name):
+    """Plots Open Access (oa) papers by discipline for the given provider.
+    Discipline is a UVA-specific column. Mapped from 'field'.
+    This gets a provider as an argument, finds all the unique disciplines within that provider
+    then iterates through each year over the 10 year scopus data (2008-2017) and adds # of OA
+    publications to each discipline to get the total per discipline."""
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)           
+
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
+    
+    oa_info_by_provider = []
+    
+    for i in disciplines_data:
+        discipline_name = i[0]
+        oa_papers = i[31] + i[32] + i[33] + i[34] + i[35] + i[36] + i[37] + i[38] + i[39] + i[40]       #index for each column oa_papers_2008 + oa_papers_2009...
+        oa_info_by_provider.append((discipline_name, oa_papers))
+    
+    oa_info_by_provider = sorted(oa_info_by_provider, key=itemgetter(0), reverse=True)      #sorts in reverse alphabetical order 
+    disciplines = [x[0] for x in oa_info_by_provider]
+    oa_papers_total = [x[1] for x in oa_info_by_provider]
+    
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Number Open Access papers for provider: {provider_name}')
+    
+    plot = plt.barh(disciplines, oa_papers_total, color='green')
+    plt.xlim(0,450000)    #changes left and right limit of x axis in plot
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() + 20000,
+                 i.get_y() + .35,
+                 score,
+                 ha='center',
+                 va='center')    
+        
+
+def percentage_oa_papers_by_discipline(provider_name):
+    """Plots percentage Open Access (OA) papers by discipline for given provider.
+    This is percentage open access papers of total papers by discipline.
+    Discipline is a UVA-specific column. Mapped from 'field'.
+    This sums total OA papers and divides that by total papers for each discipline, for the given provider"""
+   
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)           
+
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+
+    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
+                 
+    oa_info_by_provider = []
+        
+    for i in disciplines_data:
+        discipline_name = i[0]
+        oa_papers = i[31] + i[32] + i[33] + i[34] + i[35] + i[36] + i[37] + i[38] + i[39] + i[40]       #index for each column oa_papers_2008 + oa_papers_2009...
+        total_papers = i[51] + i[52] + i[53] + i[54] + i[55] + i[56] + i[57] + i[58] + i[59] + i[60]
+        oa_info_by_provider.append((discipline_name, oa_papers, total_papers))
+        
+        
+    oa_info_by_provider = sorted(oa_info_by_provider, key=itemgetter(0), reverse=True)
+    disciplines = [x[0] for x in oa_info_by_provider]
+    oa_percentage_by_discipline = [x[1]/x[2] for x in oa_info_by_provider]
+    
+    plot_stats = []
+    for i in oa_info_by_provider:
+        plot_stats.append(f'{i[1]} / {i[2]}')
+    
+
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Open Access Papers as Percentage of Total Papers in Discipline for Provider: {provider_name}')
+    
+    plot = plt.barh(disciplines, oa_percentage_by_discipline, color='green')
+    plt.xlim(0, .61)  #changes left and right limit of x axis in plot
+    
+    element_number = 0
+    for i in plot:
+        plt.text(i.get_width() + .065,
+                 i.get_y() + .35,
+                 plot_stats[element_number],
+                 ha='center',
+                 va='center')
+        element_number += 1
+        
     

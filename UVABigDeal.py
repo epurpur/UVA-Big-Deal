@@ -51,12 +51,16 @@ if __name__ == '__main__':
     
 ####FOR VRL meeting 8/5#####
 
-    vrl.big5_jr80_jr1_downloads()
-    vrl.big5_jr80_jr5_downloads()
+#    vrl.big5_jr80_jr1_downloads()
+#    vrl.big5_jr90_jr1_downloads()
+#    vrl.big5_jr95_jr1_downloads()
+#    vrl.big5_jr80_jr5_downloads()
 #    vrl.big5_ref80_references()
 #    vrl.big5_pap80_papers()  
 #    vrl.number_uva_papers_over_time()
 #    vrl.percent_uva_papers_over_time()
+#    vrl.big5_percent_jr5_of_jr1()
 #    vrl.oa_percent_papers_available_over_time()
 #    vrl.oa_number_papers_available_over_time()
-
+#    vrl.number_oa_papers_by_discipline('Elsevier')
+    vrl.percentage_oa_papers_by_discipline('Elsevier')
