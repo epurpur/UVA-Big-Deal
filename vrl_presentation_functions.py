@@ -494,8 +494,8 @@ def number_uva_papers_over_time():
 
     plt.figure(num=None, figsize=(10, 10))
     plt.suptitle(f'Number of UVA Authored Papers by Year')
-#    plt.xlabel('Year')
-#    plt.ylabel('Paper Count')
+    plt.xlabel('Year')
+    plt.ylabel('Paper Count')
 
     #change this to be dynamic instead of hard coded
     plt.plot(years, publications_by_provider[0], label='Elsevier')
@@ -570,8 +570,8 @@ def percent_uva_papers_over_time():
        
     plt.figure(num=None, figsize=(10, 10))
     plt.suptitle(f'Percentage of UVA Authored Papers by Year')
-#    plt.xlabel('Year')
-#    plt.ylabel('Percent of Total Publications')
+    plt.xlabel('Year')
+    plt.ylabel('Percent of Total Publications')
 
     plt.plot(years, percentage_by_provider[0], label='Elsevier')
     plt.plot(years, percentage_by_provider[1], label='Taylor & Francis')
@@ -625,8 +625,8 @@ def oa_percent_papers_available_over_time():
         
     plt.figure(num=None, figsize=(10, 10))
     plt.suptitle(f'Percentage of OA-Available Papers by Year')
-#    plt.xlabel('Year')
-#    plt.ylabel('Percent Available')
+    plt.xlabel('Year')
+    plt.ylabel('Percent Available')
     
     plt.plot(years, oa_by_provider[0], label='Elsevier')
     plt.plot(years, oa_by_provider[1], label='Taylor & Francis')
@@ -680,8 +680,8 @@ def oa_number_papers_available_over_time():
 
     plt.figure(num=None, figsize=(10,10))
     plt.suptitle(f'Number of OA-Available Papers by Year')
-#    plt.xlabel('Year')
-#    plt.ylabel('Number Papers Available')
+    plt.xlabel('Year')
+    plt.ylabel('Number Papers Available')
 
     plt.plot(years, oa_by_provider[0], label='Elsevier')
     plt.plot(years, oa_by_provider[1], label='Taylor & Francis')
@@ -701,7 +701,6 @@ def big5_percent_jr5_of_jr1():
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
     big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']    
-#    big5 = ['AIP', 'American Chemical Society']
     
     percent_jr5_of_jr1 = []
     
@@ -723,13 +722,15 @@ def big5_percent_jr5_of_jr1():
     plt.figure(num=None, figsize=(8,8))
     plt.suptitle(f'Percent JR5 downloads of JR1 downloads \n (Measures currency of article use)')
     plot = plt.barh(big5, percent_jr5_of_jr1, height=.8, color='green')    
+    plt.xlim(0, 1)  #changes left and right limit of x axis in plot
+
         
     for i in plot:
         score = i.get_width()
         
-        plt.text(i.get_width() - .0175,           #sets x axis position of labels
+        plt.text(i.get_width() - .034,           #sets x axis position of labels
                  i.get_y() + .35,
-                 '{:.2%}'.format(score),
+                 '{:.1%}'.format(score),
                  ha='center',
                  va='center') 
     
@@ -807,15 +808,64 @@ def percentage_oa_papers_by_discipline(provider_name):
     plt.suptitle(f'Open Access Papers as Percentage of Total Papers in Discipline for Provider: {provider_name}')
     
     plot = plt.barh(disciplines, oa_percentage_by_discipline, color='green')
-    plt.xlim(0, .61)  #changes left and right limit of x axis in plot
+    plt.xlim(0, 1)  #changes left and right limit of x axis in plot
     
     element_number = 0
     for i in plot:
-        plt.text(i.get_width() + .065,
+        plt.text(i.get_width() + .1,
                  i.get_y() + .35,
                  plot_stats[element_number],
                  ha='center',
                  va='center')
         element_number += 1
+        
+        
+def big5_cost_per_jr1_download():
+    """Using cost data per provider, plots cost per jr1 download for each provider. Divides total package
+    price by total number of JR1 downloads. JR1 downloads are all years' downloads in current year.
+    Fix this to incorporate the usual csv reading the data instead of hard coded values"""
+
+    downloads_info = []
+
+    cost_per_provider = {
+                    'Elsevier' : [2340568.00, 153142],
+                    'Sage' : [207700.00, 9810],
+                    'Wiley' : [1016814.29, 36531],
+                    'Springer' : [928223.19, 32909],
+                    'Taylor & Francis' : [95475.00, 7135]}  
+    
+    for provider_name, values in cost_per_provider.items():
+        package_cost = values[0]
+        jr1_downloads = values[1]
+        cost_per_download = package_cost/jr1_downloads
+        downloads_info.append((provider_name, cost_per_download))
+        
+    providers = [x[0] for x in downloads_info]
+    cost = [x[1] for x in downloads_info]
+    
+    
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Big5 Providers Cost Per JR5 Download\n Package Cost/# of JR5 Downloads')
+    plt.xlabel('Dollars')
+                 
+    plot = plt.barh(providers, cost, color='green')
+    
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() - 3,
+                 i.get_y() + .35,
+                 '${:,.2f}'.format(score),
+                 ha='center',
+                 va='center')
+    
+        
+    
+    
+    
+
+    
+    
+    
         
     
