@@ -818,11 +818,52 @@ def percentage_oa_papers_by_discipline(provider_name):
                  ha='center',
                  va='center')
         element_number += 1
-        
+     
         
 def big5_cost_per_jr1_download():
     """Using cost data per provider, plots cost per jr1 download for each provider. Divides total package
     price by total number of JR1 downloads. JR1 downloads are all years' downloads in current year.
+    Fix this to incorporate the usual csv reading the data instead of hard coded values"""
+
+    downloads_info = []
+
+    cost_per_provider = {
+                    'Elsevier' : [2340568.00, 740070],
+                    'Sage' : [207700.00, 68907],
+                    'Wiley' : [1016814.29, 246771],
+                    'Springer' : [928223.19, 134038],
+                    'Taylor & Francis' : [95475.00, 46514]}  
+    
+    for provider_name, values in cost_per_provider.items():
+        package_cost = values[0]
+        jr1_downloads = values[1]
+        cost_per_download = package_cost/jr1_downloads
+        downloads_info.append((provider_name, cost_per_download))
+        
+    providers = [x[0] for x in downloads_info]
+    cost = [x[1] for x in downloads_info]
+    
+    
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle('Big5 Providers Cost Per JR5 Download\n Package Cost/# of JR5 Downloads')
+    plt.xlabel('Dollars')
+                 
+    plot = plt.barh(providers, cost, color='green')
+    
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() - .5,
+                 i.get_y() + .35,
+                 '${:,.2f}'.format(score),
+                 ha='center',
+                 va='center')
+        
+
+        
+def big5_cost_per_jr5_download():
+    """Using cost data per provider, plots cost per jr5 download for each provider. Divides total package
+    price by total number of JR5 downloads. JR5 downloads are all years' downloads in current year.
     Fix this to incorporate the usual csv reading the data instead of hard coded values"""
 
     downloads_info = []

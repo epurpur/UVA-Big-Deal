@@ -51,6 +51,17 @@ if __name__ == '__main__':
     
 ####FOR VRL meeting 8/5#####
 
+    #Multiple Vendors
+#    vrl.big5_percent_jr5_of_jr1()
+#    vrl.big5_cost_per_jr1_download()
+#    vrl.big5_cost_per_jr5_download()
+    
+    #Elsevier only
+    
+    
+    vrl.percent_uva_papers_over_time()
+#    vrl.oa_percent_papers_available_over_time()    
+    
 #    vrl.big5_jr80_jr1_downloads()
 #    vrl.big5_jr90_jr1_downloads()
 #    vrl.big5_jr95_jr1_downloads()
@@ -59,8 +70,9 @@ if __name__ == '__main__':
 #    vrl.big5_pap80_papers()  
 #    vrl.number_uva_papers_over_time()
 #    vrl.percent_uva_papers_over_time()
-#    vrl.big5_percent_jr5_of_jr1()
+
 #    vrl.oa_percent_papers_available_over_time()
 #    vrl.oa_number_papers_available_over_time()
 #    vrl.number_oa_papers_by_discipline('Elsevier')
-    vrl.percentage_oa_papers_by_discipline('Elsevier')
+#    vrl.percentage_oa_papers_by_discipline('Elsevier')
+
