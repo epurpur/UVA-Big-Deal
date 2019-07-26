@@ -10,6 +10,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+from matplotlib.ticker import StrMethodFormatter
 from operator import itemgetter
 import numpy as np
 from pylab import *
@@ -507,7 +508,7 @@ def number_uva_papers_over_time():
     plt.legend()
 
 
-def percent_uva_papers_over_time():
+def percent_uva_papers_over_time(provider):
     """Plots percentage of UVA authored papers in each of the big 5 providers over time (2008-2017)
     Divides # UVA authored papers for current year by total number of papers in that journal.
     For example, this is 'papers_2008' / total_2008"""
@@ -568,21 +569,28 @@ def percent_uva_papers_over_time():
         
     years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
        
-    plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle(f'Percentage of UVA Authored Papers by Year')
-    plt.xlabel('Year')
-    plt.ylabel('Percent of Total Publications')
-
-    plt.plot(years, percentage_by_provider[0], label='Elsevier')
-    plt.plot(years, percentage_by_provider[1], label='Taylor & Francis')
-    plt.plot(years, percentage_by_provider[2], label='Sage')
-    plt.plot(years, percentage_by_provider[3], label='Springer')
-    plt.plot(years, percentage_by_provider[4], label='Wiley')
     
-    plt.legend()
+    #build plot
+    plt.figure(num=None, figsize=(10, 10))
+
+    plt.suptitle(f'Percentage of UVA Authored Papers of All Papers by Year by Provider : {provider}')
+    plt.xlabel('Year')
+    plt.ylabel('Percent of Total Papers')
+    plt.ylim(0, 0.00165)
+
+    plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.3%}'))    #formats y axis as %
+
+    plt.plot(years, percentage_by_provider[0])
+#    plt.plot(years, percentage_by_provider[0], label='Elsevier')
+#    plt.plot(years, percentage_by_provider[1], label='Taylor & Francis')
+#    plt.plot(years, percentage_by_provider[2], label='Sage')
+#    plt.plot(years, percentage_by_provider[3], label='Springer')
+#    plt.plot(years, percentage_by_provider[4], label='Wiley')
+    
+#    plt.legend()
 
 
-def oa_percent_papers_available_over_time():
+def oa_percent_papers_available_over_time(provider):
     """Percent of papers available Open Access (oa) for each of the big 5 providers over time (2008-2017)
     Looks at columns under '% of OA papers in 1findr per journal/provider (intersection with Scopus)"""
     
@@ -624,17 +632,21 @@ def oa_percent_papers_available_over_time():
     years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
         
     plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle(f'Percentage of OA-Available Papers by Year')
+    plt.suptitle(f'Percentage of OA Available Papers by Year in 2017 by Provider : {provider}')
     plt.xlabel('Year')
-    plt.ylabel('Percent Available')
+    plt.ylabel('Percent Papers Available')
+    plt.ylim(0, .33)
     
-    plt.plot(years, oa_by_provider[0], label='Elsevier')
-    plt.plot(years, oa_by_provider[1], label='Taylor & Francis')
-    plt.plot(years, oa_by_provider[2], label='Sage')
-    plt.plot(years, oa_by_provider[3], label='Springer')
-    plt.plot(years, oa_by_provider[4], label='Wiley')
+    plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.0%}'))    #formats y axis as %
+
+    plt.plot(years, oa_by_provider[0])
+#    plt.plot(years, oa_by_provider[0], label='Elsevier')
+#    plt.plot(years, oa_by_provider[1], label='Taylor & Francis')
+#    plt.plot(years, oa_by_provider[2], label='Sage')
+#    plt.plot(years, oa_by_provider[3], label='Springer')
+#    plt.plot(years, oa_by_provider[4], label='Wiley')
     
-    plt.legend()
+#    plt.legend()
      
 
 def oa_number_papers_available_over_time():
@@ -644,7 +656,7 @@ def oa_number_papers_available_over_time():
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
     big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']
-#    big5 = ['AIP']
+
     oa_by_provider = []
     
     for provider_name in big5:
@@ -700,7 +712,7 @@ def big5_percent_jr5_of_jr1():
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
-    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']    
+    big5 = ['Wiley', 'Taylor & Francis', 'Springer', 'Sage', 'Elsevier']    
     
     percent_jr5_of_jr1 = []
     
@@ -828,11 +840,12 @@ def big5_cost_per_jr1_download():
     downloads_info = []
 
     cost_per_provider = {
-                    'Elsevier' : [2340568.00, 740070],
-                    'Sage' : [207700.00, 68907],
                     'Wiley' : [1016814.29, 246771],
+                    'Taylor & Francis' : [95475.00, 46514],
                     'Springer' : [928223.19, 134038],
-                    'Taylor & Francis' : [95475.00, 46514]}  
+                    'Sage' : [207700.00, 68907],
+                    'Elsevier' : [2340568.00, 740070]
+                    }  
     
     for provider_name, values in cost_per_provider.items():
         package_cost = values[0]
@@ -845,7 +858,7 @@ def big5_cost_per_jr1_download():
     
     
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle('Big5 Providers Cost Per JR5 Download\n Package Cost/# of JR5 Downloads')
+    plt.suptitle('Big5 Providers Cost Per JR1 Download\n (Package Cost/# of JR1 Downloads)')
     plt.xlabel('Dollars')
                  
     plot = plt.barh(providers, cost, color='green')
@@ -869,11 +882,12 @@ def big5_cost_per_jr5_download():
     downloads_info = []
 
     cost_per_provider = {
-                    'Elsevier' : [2340568.00, 153142],
-                    'Sage' : [207700.00, 9810],
                     'Wiley' : [1016814.29, 36531],
+                    'Taylor & Francis' : [95475.00, 7135],
                     'Springer' : [928223.19, 32909],
-                    'Taylor & Francis' : [95475.00, 7135]}  
+                    'Sage' : [207700.00, 9810],
+                    'Elsevier' : [2340568.00, 153142]
+                    }  
     
     for provider_name, values in cost_per_provider.items():
         package_cost = values[0]
@@ -886,7 +900,7 @@ def big5_cost_per_jr5_download():
     
     
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle('Big5 Providers Cost Per JR5 Download\n Package Cost/# of JR5 Downloads')
+    plt.suptitle('Big5 Providers Cost Per JR5 Download\n (Package Cost/# of JR5 Downloads)')
     plt.xlabel('Dollars')
                  
     plot = plt.barh(providers, cost, color='green')
@@ -901,12 +915,219 @@ def big5_cost_per_jr5_download():
                  va='center')
     
         
+def jr1_by_discipline_by_provider(provider_name):
+    """Plots JR1 downloads by discipline for chosen provider. User inputs provider name and dynamically generates plot for that provider.
+    Discipline is UVA specific and is the re-defined fields column"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
+    disciplines = []
+ 
+    for i in disciplines_data:
+        disciplines.append(i[0])
+    
+    disciplines = list(reversed(disciplines))             #to add to bar graph in reverse alphabetical order so it looks nicer
+    
+    sums_by_discipline = subset_by_provider.groupby(['Discipline'])['Downloads JR1 2017'].sum()     #sum of downloads per field
+    
+    sums_by_discipline = list(reversed(sums_by_discipline))
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'JR1 Downloads by UVA Discipline for Provider: {provider_name}\n (all years articles downloaded in 2017)')
+    plot = plt.barh(disciplines, sums_by_discipline, height=.8, color='green')
+    plt.xlim(0, 350000)
+    plt.xlabel('# of Downloads')
+    
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() + 16000,
+                 i.get_y() + .35,
+                 '{:,.0f}'.format(score),
+                 ha='center',
+                 va='center')
+    
+    plt.show()
     
     
+def jr5_by_discipline_by_provider(provider_name):
+    """Plots JR5 downloads by discipline for chosen provider. User inputs provider name and dynamically generates plot for that provider.
+    Discipline is UVA specific and is the re-defined fields column"""
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
+    disciplines = []
+ 
+    for i in disciplines_data:
+        disciplines.append(i[0])
+    
+    disciplines = list(reversed(disciplines))             #to add to bar graph in reverse alphabetical order so it looks nicer
+    
+    sums_by_discipline = subset_by_provider.groupby(['Discipline'])['Downloads JR5 2017 in 2017'].sum()     #sum of downloads per field
+    
+    sums_by_discipline = list(reversed(sums_by_discipline))
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'JR5 Downloads by UVA Discipline for Provider: {provider_name}\n (2017 articles downloaded in 2017)')
+    plot = plt.barh(disciplines, sums_by_discipline, height=.8, color='green')
+    plt.xlim(0, 75000)
+    plt.xlabel('# of Downloads')
+    
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() + 4000,
+                 i.get_y() + .35,
+                 '{:,.0f}'.format(score),
+                 ha='center',
+                 va='center')
+        
+
+def references_by_discipline_by_provider(provider_name):
+    """Plots references by discipline for chosen provider. 
+    Discipline is UVA specific and is the re-defined fields column.
+    References are defined as citations of papers authored by a UVA affiliated author.
+    References to paper with more than onne UVA affiliated author are counted as one paper."""
+      
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
+    disciplines = []
+ 
+    for i in disciplines_data:
+        disciplines.append(i[0])
+    
+    disciplines = list(reversed(disciplines))             #to add to bar graph in reverse alphabetical order so it looks nicer
+    
+    sums_by_discipline = subset_by_provider.groupby(['Discipline'])['References'].sum()     #sum of downloads per field
+    
+    sums_by_discipline = list(reversed(sums_by_discipline))
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'References by UVA Discipline for Provider: {provider_name}\n')
+    plot = plt.barh(disciplines, sums_by_discipline, height=.8, color='green')
+    plt.xlim(0, 60000)
+    plt.xlabel('# of References')
+    
+    for i in plot:
+        score = i.get_width()
+        
+        plt.text(i.get_width() + 3500,
+                 i.get_y() + .35,
+                 '{:,.0f}'.format(score),
+                 ha='center',
+                 va='center')
     
 
+def papers_by_discipline_by_provider(provider_name):
+    """Plots references by discipline for chosen provider. 
+    Discipline is UVA specific and is the re-defined fields column.
+    Papers are defined as papers authored by a UVA affiliated author.
+    Papers with multiple UVA affiliated author only count as one paper."""
+      
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
+    subset_by_provider = data.loc[data['Provider'] == provider_name]
     
+    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
+    disciplines = []
+ 
+    for i in disciplines_data:
+        disciplines.append(i[0])
     
+    disciplines = list(reversed(disciplines))             #to add to bar graph in reverse alphabetical order so it looks nicer
+    
+    sums_by_discipline = subset_by_provider.groupby(['Discipline'])['Papers'].sum()     #sum of downloads per field
+    
+    sums_by_discipline = list(reversed(sums_by_discipline))
+    
+    mpl.rcParams['ytick.major.width'] = 1
+    mpl.rcParams['xtick.major.width'] = 1
+    plt.figure(num=None, figsize=(8,8))
+    plt.suptitle(f'Papers by UVA Discipline for Provider: {provider_name}\n')
+    plot = plt.barh(disciplines, sums_by_discipline, height=.8, color='green')
+    plt.xlim(0, 2900)
+    plt.xlabel('# of Papers')
+    
+    for i in plot:
+        score = i.get_width()
+
+        plt.text(i.get_width() + 100,
+                 i.get_y() + .35,
+                 '{:,.0f}'.format(score),
+                 ha='center',
+                 va='center')
         
+
+def uva_references_over_time(provider):
+    """UVA references by provider by year, referencing Scopus data.
+    Looks at columns under 'References to journal/provider by your institution's authors (as measured in Scopus)
+    References are defined as: Number of References made by researchers of your institution to an article from a given journal"""
+    
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']
+
+    ref_by_provider = []
+    
+    for provider_name in big5:
+        
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+        ref_by_year = []
+    
+        ref_2008 = subset_by_provider.ref_2008.tolist()
+        ref_by_year.append(ref_2008[0])
+        ref_2009 = subset_by_provider.ref_2009.tolist()
+        ref_by_year.append(ref_2009[0])
+        ref_2010 = subset_by_provider.ref_2010.tolist()
+        ref_by_year.append(ref_2010[0])
+        ref_2011 = subset_by_provider.ref_2011.tolist()
+        ref_by_year.append(ref_2011[0])
+        ref_2012 = subset_by_provider.ref_2012.tolist()
+        ref_by_year.append(ref_2012[0])
+        ref_2013 = subset_by_provider.ref_2013.tolist()
+        ref_by_year.append(ref_2013[0])
+        ref_2014 = subset_by_provider.ref_2014.tolist()
+        ref_by_year.append(ref_2014[0])
+        ref_2015 = subset_by_provider.ref_2015.tolist()
+        ref_by_year.append(ref_2015[0])
+        ref_2016 = subset_by_provider.ref_2016.tolist()
+        ref_by_year.append(ref_2016[0])
+        ref_2017 = subset_by_provider.ref_2017.tolist()
+        ref_by_year.append(ref_2017[0])
+        
+        ref_by_provider.append(ref_by_year)
+        
+    years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
+
+    plt.figure(num=None, figsize=(10,10))
+    plt.suptitle(f'Number of References Made by UVA Researchers to Articles by Provider : {provider}')
+    plt.xlabel('Year')
+    plt.ylabel('Number References')
+    plt.ylim(0, 18000)
+
+    plt.plot(years, ref_by_provider[0])
+#    plt.plot(years, ref_by_provider[0], label='Elsevier')
+#    plt.plot(years, ref_by_provider[1], label='Taylor & Francis')
+#    plt.plot(years, ref_by_provider[2], label='Sage')
+#    plt.plot(years, ref_by_provider[3], label='Springer')
+#    plt.plot(years, ref_by_provider[4], label='Wiley')
+
+#    plt.legend()  
     
