@@ -9,11 +9,11 @@ Created on Mon Jul 22 14:39:38 2019
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 from matplotlib.ticker import StrMethodFormatter
 from operator import itemgetter
 import numpy as np
-from pylab import *
+
+
 
 
 """Functions that will be presented at the VRL meeting, august 5"""
