@@ -52,19 +52,21 @@ if __name__ == '__main__':
 ####FOR VRL meeting 8/5#####
 
     #Multiple Vendors
-#    vrl.big5_percent_jr5_of_jr1()
-#    vrl.big5_cost_per_jr1_download()
-#    vrl.big5_cost_per_jr5_download()
-#    
+    vrl.jr1_big5_jr80_jr90_jr95_stacked_bar()
+    vrl.big5_percent_jr5_of_jr1()
+    vrl.big5_cost_per_jr1_download()
+    vrl.big5_cost_per_jr5_download()
+    
 #    #Elsevier only
-#    
-#    vrl.uva_references_over_time('Elsevier')
-#    vrl.percent_uva_papers_over_time('Elsevier')
-#    vrl.oa_percent_papers_available_over_time('Elsevier')   
-#    vrl.jr1_by_discipline_by_provider('Elsevier')
-#    vrl.jr5_by_discipline_by_provider('Elsevier')
-#    vrl.references_by_discipline_by_provider('Elsevier')
-#    vrl.papers_by_discipline_by_provider('Elsevier')
+    
+    vrl.uva_references_over_time('Elsevier')
+    vrl.percent_uva_papers_over_time('Elsevier')
+    vrl.oa_percent_papers_available_over_time('Elsevier')   
+    vrl.jr1_by_discipline_by_provider('Elsevier')
+    vrl.jr5_by_discipline_by_provider('Elsevier')
+    vrl.references_by_discipline_by_provider('Elsevier')
+    vrl.papers_by_discipline_by_provider('Elsevier')
+    
     
     
     
