@@ -733,20 +733,21 @@ def big5_percent_jr5_of_jr1():
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'Percent JR5 downloads of JR1 downloads \n (Measures currency of article use)')
-    plot = plt.barh(big5, percent_jr5_of_jr1, height=.8, color='green')    
-    plt.xlim(0, 1)  #changes left and right limit of x axis in plot
-
-        
+    plt.suptitle(f'Percent JR5 downloads of JR1 downloads (for 2017)')
+    plot = plt.bar(big5, percent_jr5_of_jr1, width=.8, color='green')   
+    plt.ylabel('Percent of Total')
+    plt.ylim(0, 1)  #changes top and bottom limit of y axis in plot
+    
     for i in plot:
-        score = i.get_width()
+        score = i.get_height()
         
-        plt.text(i.get_width() - .034,           #sets x axis position of labels
-                 i.get_y() + .35,
+        plt.text(i.get_x() + i.get_width()/2., 
+                 1.05 * score, 
                  '{:.1%}'.format(score),
                  ha='center',
-                 va='center') 
-    
+                 va='bottom')
+
+        
     
 def number_oa_papers_by_discipline(provider_name):
     """Plots Open Access (oa) papers by discipline for the given provider.
@@ -859,19 +860,19 @@ def big5_cost_per_jr1_download():
     
     
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle('Big5 Providers Cost Per JR1 Download\n (Package Cost/# of JR1 Downloads)')
-    plt.xlabel('Dollars')
+    plt.suptitle('Big5 Providers Cost Per JR1 Download (for 2017)\n (Package Cost / # of JR1 Downloads)')
+    plt.ylabel('Dollars')
                  
-    plot = plt.barh(providers, cost, color='green')
+    plot = plt.bar(providers, cost, color='green')
     
     for i in plot:
-        score = i.get_width()
+        score = i.get_height()
         
-        plt.text(i.get_width() - .5,
-                 i.get_y() + .35,
+        plt.text(i.get_x() + i.get_width()/2., 
+                 1.01 * score, 
                  '${:,.2f}'.format(score),
                  ha='center',
-                 va='center')
+                 va='bottom')
         
 
         
@@ -901,19 +902,20 @@ def big5_cost_per_jr5_download():
     
     
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle('Big5 Providers Cost Per JR5 Download\n (Package Cost/# of JR5 Downloads)')
-    plt.xlabel('Dollars')
+    plt.suptitle('Big5 Providers Cost Per JR5 Download (for 2017)\n (Package Cost / # of JR5 Downloads)')
+    plt.ylabel('Dollars')
                  
-    plot = plt.barh(providers, cost, color='green')
+    plot = plt.bar(providers, cost, color='green')
     
     for i in plot:
-        score = i.get_width()
+        score = i.get_height()
         
-        plt.text(i.get_width() - 3,
-                 i.get_y() + .35,
+        plt.text(i.get_x() + i.get_width()/2., 
+                 1.01 * score, 
                  '${:,.2f}'.format(score),
                  ha='center',
-                 va='center')
+                 va='bottom')
+    
     
         
 def jr1_by_discipline_by_provider(provider_name):
@@ -936,11 +938,18 @@ def jr1_by_discipline_by_provider(provider_name):
     
     sums_by_discipline = list(reversed(sums_by_discipline))
     
+    stats_by_discipline = [list(i) for i in zip(disciplines, sums_by_discipline)]   #zip them together and make list
+    stats_by_discipline = sorted(stats_by_discipline, key=itemgetter(1))   #sort in order of # of downloads
+    
+    disciplines_plot = [i[0] for i in stats_by_discipline]
+    sums = [i[1] for i in stats_by_discipline]
+    
+    
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
     plt.suptitle(f'JR1 Downloads by UVA Discipline for Provider: {provider_name}\n (all years articles downloaded in 2017)')
-    plot = plt.barh(disciplines, sums_by_discipline, height=.8, color='green')
+    plot = plt.barh(disciplines_plot, sums, height=.8, color='green')
     plt.xlim(0, 350000)
     plt.xlabel('# of Downloads')
     
@@ -954,6 +963,7 @@ def jr1_by_discipline_by_provider(provider_name):
                  va='center')
     
     plt.show()
+      
     
     
 def jr5_by_discipline_by_provider(provider_name):
@@ -973,14 +983,19 @@ def jr5_by_discipline_by_provider(provider_name):
     disciplines = list(reversed(disciplines))             #to add to bar graph in reverse alphabetical order so it looks nicer
     
     sums_by_discipline = subset_by_provider.groupby(['Discipline'])['Downloads JR5 2017 in 2017'].sum()     #sum of downloads per field
-    
     sums_by_discipline = list(reversed(sums_by_discipline))
+    
+    stats_by_discipline = [list(i) for i in zip(disciplines, sums_by_discipline)]   #zip them together and make list
+    stats_by_discipline = sorted(stats_by_discipline, key=itemgetter(1))   #sort in order of # of downloads
+    
+    disciplines_plot = [i[0] for i in stats_by_discipline]
+    sums = [i[1] for i in stats_by_discipline]
     
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
     plt.suptitle(f'JR5 Downloads by UVA Discipline for Provider: {provider_name}\n (2017 articles downloaded in 2017)')
-    plot = plt.barh(disciplines, sums_by_discipline, height=.8, color='green')
+    plot = plt.barh(disciplines_plot, sums, height=.8, color='green')
     plt.xlim(0, 75000)
     plt.xlabel('# of Downloads')
     
@@ -992,13 +1007,12 @@ def jr5_by_discipline_by_provider(provider_name):
                  '{:,.0f}'.format(score),
                  ha='center',
                  va='center')
+
         
 
 def references_by_discipline_by_provider(provider_name):
     """Plots references by discipline for chosen provider. 
-    Discipline is UVA specific and is the re-defined fields column.
-    References are defined as citations of papers authored by a UVA affiliated author.
-    References to paper with more than onne UVA affiliated author are counted as one paper."""
+    Discipline is UVA specific and is the re-defined fields column"""
       
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
@@ -1013,14 +1027,20 @@ def references_by_discipline_by_provider(provider_name):
     disciplines = list(reversed(disciplines))             #to add to bar graph in reverse alphabetical order so it looks nicer
     
     sums_by_discipline = subset_by_provider.groupby(['Discipline'])['References'].sum()     #sum of downloads per field
-    
     sums_by_discipline = list(reversed(sums_by_discipline))
+    
+    stats_by_discipline = [list(i) for i in zip(disciplines, sums_by_discipline)]   #zip them together and make list
+    stats_by_discipline = sorted(stats_by_discipline, key=itemgetter(1))   #sort in order of # of downloads
+    
+    disciplines_plot = [i[0] for i in stats_by_discipline]
+    sums = [i[1] for i in stats_by_discipline]
+    
     
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
     plt.suptitle(f'References by UVA Discipline for Provider: {provider_name}\n')
-    plot = plt.barh(disciplines, sums_by_discipline, height=.8, color='green')
+    plot = plt.barh(disciplines_plot, sums, height=.8, color='green')
     plt.xlim(0, 60000)
     plt.xlabel('# of References')
     
@@ -1032,6 +1052,7 @@ def references_by_discipline_by_provider(provider_name):
                  '{:,.0f}'.format(score),
                  ha='center',
                  va='center')
+        
     
 
 def papers_by_discipline_by_provider(provider_name):
@@ -1053,14 +1074,19 @@ def papers_by_discipline_by_provider(provider_name):
     disciplines = list(reversed(disciplines))             #to add to bar graph in reverse alphabetical order so it looks nicer
     
     sums_by_discipline = subset_by_provider.groupby(['Discipline'])['Papers'].sum()     #sum of downloads per field
-    
     sums_by_discipline = list(reversed(sums_by_discipline))
+    
+    stats_by_discipline = [list(i) for i in zip(disciplines, sums_by_discipline)]   #zip them together and make list
+    stats_by_discipline = sorted(stats_by_discipline, key=itemgetter(1))   #sort in order of # of downloads
+    
+    disciplines_plot = [i[0] for i in stats_by_discipline]
+    sums = [i[1] for i in stats_by_discipline]
     
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
     plt.suptitle(f'Papers by UVA Discipline for Provider: {provider_name}\n')
-    plot = plt.barh(disciplines, sums_by_discipline, height=.8, color='green')
+    plot = plt.barh(disciplines_plot, sums, height=.8, color='green')
     plt.xlim(0, 2900)
     plt.xlabel('# of Papers')
     
@@ -1072,6 +1098,7 @@ def papers_by_discipline_by_provider(provider_name):
                  '{:,.0f}'.format(score),
                  ha='center',
                  va='center')
+        
         
 
 def uva_references_over_time(provider):
@@ -1141,8 +1168,7 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
     
     data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
 
-    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley'] 
-#    big5 = ['Elsevier']
+    big5 = ['Elsevier', 'Sage', 'Springer', 'Taylor & Francis', 'Wiley'] 
         
     stats_by_provider = []
 #    plot_stats_by_provider = []                         #used later for labels in plot
@@ -1197,23 +1223,23 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
         jr95_score = (len(jr95_highly_used_journals))/(total_journals)
         print(len(jr95_highly_used_journals))
         jr95_score = (jr95_score - (jr80_score + jr90_score))
-        print(total_journals-len(jr95_highly_used_journals))
+        print(total_journals)
         
-        other_score = (1- (jr80_score+jr90_score+jr95_score))
+        total_score = (1- (jr80_score+jr90_score+jr95_score))
 
-        stats_by_provider.append((provider_name, jr80_score, jr90_score, jr95_score, other_score))
+        stats_by_provider.append((provider_name, jr80_score, jr90_score, jr95_score, total_score))
 
 
     #make plot
     plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle('Percentage of Titles Downloaded by Provider (JR1 Downloads)\n(Shows JR80, JR90, JR95, other values)')
-    plt.ylabel('Percent of total downloads')
+    plt.suptitle('Percentage of Titles Downloaded by Provider (JR1 Downloads)')
+    plt.ylabel('Percent of total titles')
     
     #make custom plot legend
-    jr80s = mpatches.Patch(color='green', label='JR80 values')
-    jr90s = mpatches.Patch(color='orange', label='JR90 values')
-    jr95s = mpatches.Patch(color='red', label='JR95 values')
-    others = mpatches.Patch(color='grey', label='Other values')
+    jr80s = mpatches.Patch(color='magenta', label='JR80 titles')
+    jr90s = mpatches.Patch(color='orange', label='JR90 titles')
+    jr95s = mpatches.Patch(color='cyan', label='JR95 titles')
+    others = mpatches.Patch(color='grey', label='Total titles')
     
     plt.legend(handles=[jr80s, jr90s, jr95s, others], bbox_to_anchor=(1, 1))   #moves legend outside plot
     
@@ -1223,10 +1249,10 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
         jr80 = i[1]
         jr90 = i[2]
         jr95 = i[3]
-        other_values = i[4]
+        total_values = i[4]
         
-        plt.bar(provider, jr80, color='green')
+        plt.bar(provider, jr80, color='magenta')
         plt.bar(provider, jr90, bottom=jr80, color='orange')
-        plt.bar(provider, jr95, bottom=(jr80 + jr90), color='red')
-        plt.bar(provider, other_values, bottom=(jr80 + jr90 + jr95), color='grey')
+        plt.bar(provider, jr95, bottom=(jr80 + jr90), color='cyan')
+        plt.bar(provider, total_values, bottom=(jr80 + jr90 + jr95), color='grey')
     
