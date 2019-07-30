@@ -19,437 +19,58 @@ import numpy as np
 
 """Functions that will be presented at the VRL meeting, august 5"""
 
-def big5_jr80_jr1_downloads():
-    """Produces 'JR80' value by provider for JR1 downloads and charts each provider and its corresponding JR80 value.
-    JR80 is defined as: "Journals representing 80% of downloads for their respective provider"
-    Here is how JR80 score is calculated:
-        - Cleaned 'N/A' values from 'JR1..' column to remove no data values     #NEED TO FIX THIS LATER
-        - Reads data for each provider individually
-        - Finds total number of JR1 downloads
-        - Sorts individual jornals by provider in order of number of downloads
-        - Counts jr1 download values until count surpasses 80% of total jr1 downloads
-        - Calculates JR80 score as number of journals required to reach 80% / total journals by provider
-        - Plots JR80 score of all providers"""
-
-    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
-
-    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']  
-
-    jr80_by_provider = []
-    plot_stats_by_provider = []                         #used later for labels in plot
-
-    for provider_name in big5:
-        
-        subset_by_provider = data.loc[data['Provider'] == provider_name]
-        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
-    
-        for i in journals_data:
-            if i[0] == provider_name:
-                journals_data.remove(i)                 #removing aggregator column data
-
-        total_jr1_downloads = 0
-        total_journals = 0                         
-        for i in journals_data:
-            total_jr1_downloads += i[2]
-            total_journals += 1
-        
-        jr1_tuples = [(i[0], i[2]) for i in journals_data]
-        jr1_tuples_sorted = sorted(jr1_tuples, key = lambda i: i[1], reverse=True)       #sorts on second element of jr1_tuples
-
-        running_tally = 0
-        highly_used_journals = []           #THIS HOLDS (JOURNAL NAME, JR1_DOWNLOADS)
-        for i in jr1_tuples_sorted:
-            if running_tally < (total_jr1_downloads * 0.8):
-                highly_used_journals.append(i)
-                running_tally += i[1]
-                
-        jr80_score = (len(highly_used_journals))/(total_journals)
-#        print(f"{provider_name} : {len(highly_used_journals)} of {total_journals} are JR80 journals")    #used to print each provider with number of journals included
-                
-        jr80_by_provider.append((provider_name, jr80_score))
-        plot_stats_by_provider.append((provider_name, jr80_score, f'{len(highly_used_journals)}/{total_journals}'))
-        
-    jr80_by_provider = sorted(jr80_by_provider, key=itemgetter(1), reverse=True)
-    plot_stats_by_provider = sorted(plot_stats_by_provider, key=itemgetter(1), reverse=True)     #sorting to match order of jr80_scores
-    
-    
-    providers = [x[0] for x in jr80_by_provider]
-    jr80_value = [x[1] for x in jr80_by_provider]
-    plot_stats = [x[2] for x in plot_stats_by_provider]   #this is used for labels in final plot
-
-    plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle(f'Percentage JR80 Titles by Provider \n(# Journals from all years downloaded in 2017 which account for 80% of use)')
-
-    plot = plt.barh(providers, jr80_value, height=.8, color='green')
-    
-    element_number = 0
-    for i in plot:
-        plt.text(i.get_width() - .022,
-                 i.get_y() + .35,
-                 plot_stats[element_number],
-                 ha='center',
-                 va='center')
-        element_number += 1
-        
-    plt.show()
-
-
-def big5_jr90_jr1_downloads():
-    """Produces 'JR90' value by provider for JR1 downloads and charts each provider and its corresponding JR90 value.
-    JR90 is defined as: "Journals representing 90% of downloads for their respective provider"
-    Here is how JR90 score is calculated:
-        - Cleaned 'N/A' values from 'JR1..' column to remove no data values     #NEED TO FIX THIS LATER
-        - Reads data for each provider individually
-        - Finds total number of JR1 downloads
-        - Sorts individual jornals by provider in order of number of downloads
-        - Counts jr1 download values until count surpasses 90% of total jr1 downloads
-        - Calculates JR90 score as number of journals required to reach 90% / total journals by provider
-        - Plots JR90 score of all providers"""
-
-    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
-
-    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']  
-
-    jr90_by_provider = []
-    plot_stats_by_provider = []                         #used later for labels in plot
-
-    for provider_name in big5:
-        
-        subset_by_provider = data.loc[data['Provider'] == provider_name]
-        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
-    
-        for i in journals_data:
-            if i[0] == provider_name:
-                journals_data.remove(i)                 #removing aggregator column data
-
-        total_jr1_downloads = 0
-        total_journals = 0                         
-        for i in journals_data:
-            total_jr1_downloads += i[2]
-            total_journals += 1
-        
-        jr1_tuples = [(i[0], i[2]) for i in journals_data]
-        jr1_tuples_sorted = sorted(jr1_tuples, key = lambda i: i[1], reverse=True)       #sorts on second element of jr1_tuples
-
-        running_tally = 0
-        highly_used_journals = []           #THIS HOLDS (JOURNAL NAME, JR1_DOWNLOADS)
-        for i in jr1_tuples_sorted:
-            if running_tally < (total_jr1_downloads * 0.9):
-                highly_used_journals.append(i)
-                running_tally += i[1]
-                
-        jr90_score = (len(highly_used_journals))/(total_journals)
-#        print(f"{provider_name} : {len(highly_used_journals)} of {total_journals} are JR90 journals")    #used to print each provider with number of journals included
-                
-        jr90_by_provider.append((provider_name, jr90_score))
-        plot_stats_by_provider.append((provider_name, jr90_score, f'{len(highly_used_journals)}/{total_journals}'))
-        
-    jr90_by_provider = sorted(jr90_by_provider, key=itemgetter(1), reverse=True)
-    plot_stats_by_provider = sorted(plot_stats_by_provider, key=itemgetter(1), reverse=True)     #sorting to match order of jr80_scores
-    
-    
-    providers = [x[0] for x in jr90_by_provider]
-    jr90_value = [x[1] for x in jr90_by_provider]
-    plot_stats = [x[2] for x in plot_stats_by_provider]   #this is used for labels in final plot
-
-    plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle(f'Percentage JR90 Titles by Provider \n(# Journals from all years downloaded in 2017 which account for 90% of use)')
-
-    plot = plt.barh(providers, jr90_value, height=.8, color='green')
-    
-    element_number = 0
-    for i in plot:
-        plt.text(i.get_width() - .022,
-                 i.get_y() + .35,
-                 plot_stats[element_number],
-                 ha='center',
-                 va='center')
-        element_number += 1
-        
-    plt.show()
-
-
-def big5_jr95_jr1_downloads():
-    """Produces 'JR95' value by provider for JR1 downloads and charts each provider and its corresponding JR95 value.
-    JR95 is defined as: "Journals representing 95% of downloads for their respective provider"
-    Here is how JR95 score is calculated:
-        - Cleaned 'N/A' values from 'JR1..' column to remove no data values     #NEED TO FIX THIS LATER
-        - Reads data for each provider individually
-        - Finds total number of JR1 downloads
-        - Sorts individual jornals by provider in order of number of downloads
-        - Counts jr1 download values until count surpasses 95% of total jr1 downloads
-        - Calculates JR95 score as number of journals required to reach 95% / total journals by provider
-        - Plots JR95 score of all providers"""
-
-    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
-
-    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']  
-
-    jr95_by_provider = []
-    plot_stats_by_provider = []                         #used later for labels in plot
-
-    for provider_name in big5:
-        
-        subset_by_provider = data.loc[data['Provider'] == provider_name]
-        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
-    
-        for i in journals_data:
-            if i[0] == provider_name:
-                journals_data.remove(i)                 #removing aggregator column data
-
-        total_jr1_downloads = 0
-        total_journals = 0                         
-        for i in journals_data:
-            total_jr1_downloads += i[2]
-            total_journals += 1
-        
-        jr1_tuples = [(i[0], i[2]) for i in journals_data]
-        jr1_tuples_sorted = sorted(jr1_tuples, key = lambda i: i[1], reverse=True)       #sorts on second element of jr1_tuples
-
-        running_tally = 0
-        highly_used_journals = []           #THIS HOLDS (JOURNAL NAME, JR1_DOWNLOADS)
-        for i in jr1_tuples_sorted:
-            if running_tally < (total_jr1_downloads * 0.95):
-                highly_used_journals.append(i)
-                running_tally += i[1]
-                
-        jr95_score = (len(highly_used_journals))/(total_journals)
-#        print(f"{provider_name} : {len(highly_used_journals)} of {total_journals} are JR95 journals")    #used to print each provider with number of journals included
-                
-        jr95_by_provider.append((provider_name, jr95_score))
-        plot_stats_by_provider.append((provider_name, jr95_score, f'{len(highly_used_journals)}/{total_journals}'))
-        
-    jr95_by_provider = sorted(jr95_by_provider, key=itemgetter(1), reverse=True)
-    plot_stats_by_provider = sorted(plot_stats_by_provider, key=itemgetter(1), reverse=True)     #sorting to match order of jr80_scores
-    
-    
-    providers = [x[0] for x in jr95_by_provider]
-    jr95_value = [x[1] for x in jr95_by_provider]
-    plot_stats = [x[2] for x in plot_stats_by_provider]   #this is used for labels in final plot
-
-    plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle(f'Percentage JR95 Titles by Provider \n(# Journals from all years downloaded in 2017 which account for 95% of use)')
-
-    plot = plt.barh(providers, jr95_value, height=.8, color='green')
-    
-    element_number = 0
-    for i in plot:
-        plt.text(i.get_width() - .035,
-                 i.get_y() + .35,
-                 plot_stats[element_number],
-                 ha='center',
-                 va='center')
-        element_number += 1
-        
-    plt.show()
-
-
-def big5_jr80_jr5_downloads():
-    """Produces 'JR80' value by provider for JR5 downloads and charts each provider and its corresponding JR80 value.
-    JR80 is defined as: "Journals representing 80% of downloads for their respective provider"
-    Here is how JR80 score is calculated:
-        - Cleaned 'N/A' values from 'JR1..' column to remove no data values     #NEED TO FIX THIS LATER
-        - Reads data for each provider individually
-        - Finds total number of JR1 downloads
-        - Sorts individual jornals by provider in order of number of downloads
-        - Counts jr1 download values until count surpasses 80% of total jr1 downloads
-        - Calculates JR80 score as number of journals required to reach 80% / total journals by provider
-        - Plots JR80 score of all providers"""
-
-    data = pd.read_csv('JournalsPerProvider_noJR5.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
-
-    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']  
-#    big5=['AIP']
-    jr80_by_provider = []
-    plot_stats_by_provider = []                         #used later for labels in plot
-
-    for provider_name in big5:
-        
-        subset_by_provider = data.loc[data['Provider'] == provider_name]
-        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
-    
-        for i in journals_data:
-            if i[0] == provider_name:
-                journals_data.remove(i)                 #removing aggregator column data
-
-        total_jr5_downloads = 0
-        total_journals = 0                         
-        for i in journals_data:
-            total_jr5_downloads += i[3]
-            total_journals += 1
-        
-        jr5_tuples = [(i[0], i[3]) for i in journals_data]
-        jr5_tuples_sorted = sorted(jr5_tuples, key = lambda i: i[1], reverse=True)       #sorts on second element of jr5_tuples
-
-        running_tally = 0
-        highly_used_journals = []           #THIS HOLDS (JOURNAL NAME, JR5_DOWNLOADS)
-        for i in jr5_tuples_sorted:
-            if running_tally < (total_jr5_downloads * 0.8):
-                highly_used_journals.append(i)
-                running_tally += i[1]
-                
-        jr80_score = (len(highly_used_journals))/(total_journals)
-#        print(f"{provider_name} : {len(highly_used_journals)} of {total_journals} are JR80 journals")    #used to print each provider with number of journals included
-                
-        jr80_by_provider.append((provider_name, jr80_score))
-        plot_stats_by_provider.append((provider_name, jr80_score, f'{len(highly_used_journals)}/{total_journals}'))
-        
-    jr80_by_provider = sorted(jr80_by_provider, key=itemgetter(1), reverse=True)
-    plot_stats_by_provider = sorted(plot_stats_by_provider, key=itemgetter(1), reverse=True)     #sorting to match order of jr80_scores
-    
-    
-    providers = [x[0] for x in jr80_by_provider]
-    jr80_value = [x[1] for x in jr80_by_provider]
-    plot_stats = [x[2] for x in plot_stats_by_provider]   #this is used for labels in final plot
-
-    plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'Percentage JR80 Titles by Provider \n(2017 downloads in 2017 which account for 80% of use)')
-
-    plot = plt.barh(providers,jr80_value, height=.8, color='green')
-    
-    element_number = 0
-    for i in plot:
-        plt.text(i.get_width() - .022,
-                 i.get_y() + .35,
-                 plot_stats[element_number],
-                 ha='center',
-                 va='center')
-        element_number += 1
-        
-    plt.show()
-
-
-def big5_ref80_references():
-    """For those titles that make up 80% of the references (ref80_score, same as JR80 but for references). 
-    We want to number of titles that make up 80% of the references."""
+def number_of_articles_published_per_year():
+    """Plots # of articles published by all big 5 providers per year"""
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
-    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']    
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']
     
-    ref80_by_provider = []
-    plot_stats_by_provider = []    #used later for labels in plot
-    
-    for provider_name in big5:
-        
-        subset_by_provider = data.loc[data['Provider'] == provider_name]
-        
-        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
-        for journal in journals_data:
-            if journal[0] == provider_name:
-                journals_data.remove(journal)
-                     
-        total_references = 0
-        total_journals = 0
-        for journal in journals_data:
-            total_references += journal[4]
-            total_journals += 1
-            
-        reference_tuples = [(i[0], i[4]) for i in journals_data]
-        reference_tuples_sorted = sorted(reference_tuples, key = lambda i: i[1], reverse=True)      #sorts on second element of reference_tuples
-
-        running_tally = 0
-        highly_referenced_journals = []            #this holds (journal name, references)
-        for journal in reference_tuples_sorted:
-            if running_tally < (total_references * 0.8):
-                highly_referenced_journals.append(journal)
-                running_tally += journal[1]
-        
-
-        ref80_score = (len(highly_referenced_journals))/(total_journals)
-#        print(f"{provider_name} : {len(highly_referenced_journals)} of {total_journals} are ref80 journals")    #used to print each provider with number of journals included
-        
-        ref80_by_provider.append((provider_name, ref80_score))
-        plot_stats_by_provider.append((provider_name, ref80_score, f'{len(highly_referenced_journals)}/{total_journals}'))
-        
-    ref80_by_provider = sorted(ref80_by_provider, key=itemgetter(1), reverse=True)   #sorting by ref80 score
-    plot_stats_by_provider = sorted(plot_stats_by_provider, key=itemgetter(1), reverse=True)    #sorting to match order of ref80 scores
-    
-    providers = [x[0] for x in ref80_by_provider]
-    ref80_value = [x[1] for x in ref80_by_provider]
-    plot_stats = [x[2] for x in plot_stats_by_provider]     #this is to use for labels in final chart
-
-    mpl.rcParams['ytick.major.width'] = 1
-    mpl.rcParams['xtick.major.width'] = 1
-    plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle(f'Percent References to Provider Titles \n(# Journals which account for 80% of references)')
-    plot = plt.barh(providers, ref80_value, height=.8, color='green')
-    
-    element_number = 0                          #needed to count to get correct index to include for plot label
-    for i in plot:
-        plt.text(i.get_width() - .015,        #sets x axis position of labels
-                 i.get_y() + .35,
-                 plot_stats[element_number],      
-                 ha='center',
-                 va='center')
-        element_number += 1
-    
-    
-def big5_pap80_papers():
-    """For those titles that make up 80% of the publications (pap80_score, same as JR80 but for references). 
-    We want to number of titles that make up 80% of the references."""
-    
-    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
-    
-    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']    
-    
-    pap80_by_provider = []
-    plot_stats_by_provider = []     #used later for labels in plot
+    papers_by_provider = []
     
     for provider_name in big5:
         
         subset_by_provider = data.loc[data['Provider'] == provider_name]
         
-        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
-        for journal in journals_data:
-            if journal[0] == provider_name:
-                journals_data.remove(journal)
-                     
-        total_papers = 0
-        total_journals = 0
-        for journal in journals_data:
-            total_papers += journal[5]
-            total_journals += 1
-            
-        paper_tuples = [(i[0], i[5]) for i in journals_data]
-        paper_tuples_sorted = sorted(paper_tuples, key = lambda i: i[1], reverse=True)      #sorts on second element of reference_tuples
+        papers_by_year = []
+        
+        total_2008 = subset_by_provider.total_2008.tolist()
+        papers_by_year.append(total_2008[0])
+        total_2009 = subset_by_provider.total_2009.tolist()
+        papers_by_year.append(total_2009[0])
+        total_2010 = subset_by_provider.total_2010.tolist()
+        papers_by_year.append(total_2010[0])
+        total_2011 = subset_by_provider.total_2011.tolist()
+        papers_by_year.append(total_2011[0])
+        total_2012 = subset_by_provider.total_2012.tolist()
+        papers_by_year.append(total_2012[0])
+        total_2013 = subset_by_provider.total_2013.tolist()
+        papers_by_year.append(total_2013[0])
+        total_2014 = subset_by_provider.total_2014.tolist()
+        papers_by_year.append(total_2014[0])
+        total_2015 = subset_by_provider.total_2015.tolist()
+        papers_by_year.append(total_2015[0])
+        total_2016 = subset_by_provider.total_2016.tolist()
+        papers_by_year.append(total_2016[0])
+        total_2017 = subset_by_provider.total_2017.tolist()
+        papers_by_year.append(total_2017[0])
 
-        running_tally = 0
-        highly_published_journals = []            #this holds (journal name, references)
-        for journal in paper_tuples_sorted:
-            if running_tally < (total_papers * 0.8):
-                highly_published_journals.append(journal)
-                running_tally += journal[1]
-        
-
-        pap80_score = (len(highly_published_journals))/(total_journals)
-#        print(f"{provider_name} : {len(highly_published_journals)} of {total_journals} are pap80 journals")    #used to print each provider with number of journals included
-        
-        pap80_by_provider.append((provider_name, pap80_score))
-        plot_stats_by_provider.append((provider_name, pap80_score, f'{len(highly_published_journals)}/{total_journals}'))
-        
-    pap80_by_provider = sorted(pap80_by_provider, key=itemgetter(1), reverse=True)   #sorting by ref80 score
-    plot_stats_by_provider = sorted(plot_stats_by_provider, key=itemgetter(1), reverse=True)    #sorting to match order of pap80 scores
+        papers_by_provider.append(papers_by_year)        
     
-    providers = [x[0] for x in pap80_by_provider]
-    pap80_value = [x[1] for x in pap80_by_provider]
-    plot_stats = [x[2] for x in plot_stats_by_provider]     #this is to use for labels in final chart
+    years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
 
-
-    mpl.rcParams['ytick.major.width'] = 1
-    mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle(f'% Publications to Provider Titles \n(# Journals which account for 80% of publications)')
-    plot = plt.barh(providers, pap80_value, height=.8, color='green')
+    plt.suptitle(f'Number of Total Papers by Year')
+    plt.xlabel('Year')
+    plt.ylabel('Paper Count')
     
-    element_number = 0                          #needed to count to get correct index to include for plot label
-    for i in plot:
-        plt.text(i.get_width() - .015,        #sets x axis position of labels
-                 i.get_y() + .35,
-                 plot_stats[element_number],      
-                 ha='center',
-                 va='center')
-        element_number += 1
+    plt.plot(years, papers_by_provider[0], label='Elsevier')
+    plt.plot(years, papers_by_provider[1], label='Taylor & Francis')
+    plt.plot(years, papers_by_provider[2], label='Sage')
+    plt.plot(years, papers_by_provider[3], label='Springer')
+    plt.plot(years, papers_by_provider[4], label='Wiley')
+    
+    plt.legend()    
 
 
 def number_uva_papers_over_time():
@@ -509,7 +130,7 @@ def number_uva_papers_over_time():
     plt.legend()
 
 
-def percent_uva_papers_over_time(provider):
+def percent_uva_papers_over_time():
     """Plots percentage of UVA authored papers in each of the big 5 providers over time (2008-2017)
     Divides # UVA authored papers for current year by total number of papers in that journal.
     For example, this is 'papers_2008' / total_2008"""
@@ -574,24 +195,24 @@ def percent_uva_papers_over_time(provider):
     #build plot
     plt.figure(num=None, figsize=(10, 10))
 
-    plt.suptitle(f'Percentage of UVA Authored Papers of All Papers by Year by Provider : {provider}')
+    plt.suptitle(f'Percentage of UVA Authored Papers of All Papers by Year by Provider')
     plt.xlabel('Year')
     plt.ylabel('Percent of Total Papers')
-    plt.ylim(0, 0.00165)
+    plt.ylim(0, 0.004)
 
     plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.3%}'))    #formats y axis as %
 
-    plt.plot(years, percentage_by_provider[0])
-#    plt.plot(years, percentage_by_provider[0], label='Elsevier')
-#    plt.plot(years, percentage_by_provider[1], label='Taylor & Francis')
-#    plt.plot(years, percentage_by_provider[2], label='Sage')
-#    plt.plot(years, percentage_by_provider[3], label='Springer')
-#    plt.plot(years, percentage_by_provider[4], label='Wiley')
+#    plt.plot(years, percentage_by_provider[0])
+    plt.plot(years, percentage_by_provider[0], label='Elsevier')
+    plt.plot(years, percentage_by_provider[1], label='Taylor & Francis')
+    plt.plot(years, percentage_by_provider[2], label='Sage')
+    plt.plot(years, percentage_by_provider[3], label='Springer')
+    plt.plot(years, percentage_by_provider[4], label='Wiley')
     
-#    plt.legend()
+    plt.legend()
 
 
-def oa_percent_papers_available_over_time(provider):
+def oa_percent_papers_available_over_time():
     """Percent of papers available Open Access (oa) for each of the big 5 providers over time (2008-2017)
     Looks at columns under '% of OA papers in 1findr per journal/provider (intersection with Scopus)"""
     
@@ -633,22 +254,22 @@ def oa_percent_papers_available_over_time(provider):
     years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
         
     plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle(f'Percentage of OA Available Papers by Year in 2017 by Provider : {provider}')
+    plt.suptitle(f'Percentage of OA Available Papers by Year in 2017 by Provider')
     plt.xlabel('Year')
     plt.ylabel('Percent Papers Available')
-    plt.ylim(0, .33)
+    plt.ylim(0, .45)
     
     plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.0%}'))    #formats y axis as %
 
-    plt.plot(years, oa_by_provider[0])
-#    plt.plot(years, oa_by_provider[0], label='Elsevier')
-#    plt.plot(years, oa_by_provider[1], label='Taylor & Francis')
-#    plt.plot(years, oa_by_provider[2], label='Sage')
-#    plt.plot(years, oa_by_provider[3], label='Springer')
-#    plt.plot(years, oa_by_provider[4], label='Wiley')
+    plt.plot(years, oa_by_provider[0], label='Elsevier')
+    plt.plot(years, oa_by_provider[1], label='Taylor & Francis')
+    plt.plot(years, oa_by_provider[2], label='Sage')
+    plt.plot(years, oa_by_provider[3], label='Springer')
+    plt.plot(years, oa_by_provider[4], label='Wiley')
     
-#    plt.legend()
+    plt.legend()
      
+
 
 def oa_number_papers_available_over_time():
     """Number of papers available Open Access (oa) for each of the big 5 providers over time (2008-2017)
@@ -1101,7 +722,7 @@ def papers_by_discipline_by_provider(provider_name):
         
         
 
-def uva_references_over_time(provider):
+def uva_references_over_time():
     """UVA references by provider by year, referencing Scopus data.
     Looks at columns under 'References to journal/provider by your institution's authors (as measured in Scopus)
     References are defined as: Number of References made by researchers of your institution to an article from a given journal"""
@@ -1145,19 +766,19 @@ def uva_references_over_time(provider):
     years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
 
     plt.figure(num=None, figsize=(10,10))
-    plt.suptitle(f'Number of References Made by UVA Researchers to Articles by Provider : {provider}')
+    plt.suptitle(f'Number of References Made by UVA Researchers by Provider')
     plt.xlabel('Year')
     plt.ylabel('Number References')
     plt.ylim(0, 18000)
 
-    plt.plot(years, ref_by_provider[0])
-#    plt.plot(years, ref_by_provider[0], label='Elsevier')
-#    plt.plot(years, ref_by_provider[1], label='Taylor & Francis')
-#    plt.plot(years, ref_by_provider[2], label='Sage')
-#    plt.plot(years, ref_by_provider[3], label='Springer')
-#    plt.plot(years, ref_by_provider[4], label='Wiley')
+#    plt.plot(years, ref_by_provider[0])
+    plt.plot(years, ref_by_provider[0], label='Elsevier')
+    plt.plot(years, ref_by_provider[1], label='Taylor & Francis')
+    plt.plot(years, ref_by_provider[2], label='Sage')
+    plt.plot(years, ref_by_provider[3], label='Springer')
+    plt.plot(years, ref_by_provider[4], label='Wiley')
 
-#    plt.legend()  
+    plt.legend()  
     
     
     
@@ -1234,6 +855,7 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
     plt.figure(num=None, figsize=(10, 10))
     plt.suptitle('Percentage of Titles Downloaded by Provider (JR1 Downloads)')
     plt.ylabel('Percent of total titles')
+    plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.0%}'))    #formats y axis as %
     
     #make custom plot legend
     jr80s = mpatches.Patch(color='violet', label='JR80 titles')
@@ -1255,7 +877,6 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
         plt.bar(provider, jr90, bottom=jr80, color='moccasin')
         plt.bar(provider, jr95, bottom=(jr80 + jr90), color='paleturquoise')
         plt.bar(provider, total_values, bottom=(jr80 + jr90 + jr95), color='silver')
-
 
 
 def jr5_big5_jr80_jr90_jr95_stacked_bar():
@@ -1331,6 +952,9 @@ def jr5_big5_jr80_jr90_jr95_stacked_bar():
     plt.figure(num=None, figsize=(10, 10))
     plt.suptitle('Percentage of Titles Downloaded by Provider (JR5 Downloads)')
     plt.ylabel('Percent of total titles')
+    
+    plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.0%}'))    #formats y axis as %
+
     
     #make custom plot legend
     jr80s = mpatches.Patch(color='violet', label='JR80 titles')
@@ -1433,6 +1057,8 @@ def references_big5_jr80_jr90_jr95_stacked_bar():
     jr90s = mpatches.Patch(color='moccasin', label='JR90 titles')
     jr95s = mpatches.Patch(color='paleturquoise', label='JR95 titles')
     others = mpatches.Patch(color='silver', label='Total titles')
+
+    plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.0%}'))    #formats y axis as %
     
     plt.legend(handles=[jr80s, jr90s, jr95s, others], bbox_to_anchor=(1, 1))   #moves legend outside plot
     
@@ -1448,7 +1074,8 @@ def references_big5_jr80_jr90_jr95_stacked_bar():
         plt.bar(provider, jr90, bottom=jr80, color='moccasin')
         plt.bar(provider, jr95, bottom=(jr80 + jr90), color='paleturquoise')
         plt.bar(provider, total_values, bottom=(jr80 + jr90 + jr95), color='silver')
-        
+
+
         
 def papers_big5_jr80_jr90_jr95_stacked_bar():
     """Creates stacked bar plot showing jr80, jr90, jr95 score for big 5 providers.
@@ -1529,6 +1156,8 @@ def papers_big5_jr80_jr90_jr95_stacked_bar():
     jr90s = mpatches.Patch(color='moccasin', label='JR90 titles')
     jr95s = mpatches.Patch(color='paleturquoise', label='JR95 titles')
     others = mpatches.Patch(color='silver', label='Total titles')
+
+    plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.0%}'))    #formats y axis as %
     
     plt.legend(handles=[jr80s, jr90s, jr95s, others], bbox_to_anchor=(1, 1))   #moves legend outside plot
     
@@ -1544,5 +1173,65 @@ def papers_big5_jr80_jr90_jr95_stacked_bar():
         plt.bar(provider, jr90, bottom=jr80, color='moccasin')
         plt.bar(provider, jr95, bottom=(jr80 + jr90), color='paleturquoise')
         plt.bar(provider, total_values, bottom=(jr80 + jr90 + jr95), color='silver')
+
+
+papers_big5_jr80_jr90_jr95_stacked_bar()        
+
+def total_references_uva_authors():
+    """UVA references by provider by year, referencing Scopus data.
+    Looks at columns under 'References to journal/provider by your institution's authors (as measured in Scopus)
+    References are defined as: Number of References made by researchers of your institution to an article from a given journal"""
+    
+
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+    
+    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']
+
+    sum_2008 = 0
+    sum_2009 = 0
+    sum_2010 = 0
+    sum_2011 = 0
+    sum_2012 = 0
+    sum_2013 = 0
+    sum_2014 = 0
+    sum_2015 = 0
+    sum_2016 = 0
+    sum_2017 = 0
+    
+    for provider_name in big5:
         
+        subset_by_provider = data.loc[data['Provider'] == provider_name]
+    
+        ref_2008 = subset_by_provider.ref_2008.tolist()
+        sum_2008 += ref_2008[0]
+        ref_2009 = subset_by_provider.ref_2009.tolist()
+        sum_2009 += ref_2009[0]
+        ref_2010 = subset_by_provider.ref_2010.tolist()
+        sum_2010 += ref_2010[0]
+        ref_2011 = subset_by_provider.ref_2011.tolist()
+        sum_2011 += ref_2011[0]
+        ref_2012 = subset_by_provider.ref_2012.tolist()
+        sum_2012 += ref_2012[0]
+        ref_2013 = subset_by_provider.ref_2013.tolist()
+        sum_2013 += ref_2013[0]
+        ref_2014 = subset_by_provider.ref_2014.tolist()
+        sum_2014 += ref_2014[0]
+        ref_2015 = subset_by_provider.ref_2015.tolist()
+        sum_2015 += ref_2015[0]
+        ref_2016 = subset_by_provider.ref_2016.tolist()
+        sum_2016 += ref_2016[0]
+        ref_2017 = subset_by_provider.ref_2017.tolist()
+        sum_2017 += ref_2017[0]
         
+    totals_by_year = list((sum_2008, sum_2009, sum_2010, sum_2011, sum_2012, sum_2013, sum_2014, sum_2015, sum_2016, sum_2017))
+    
+    years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
+
+    plt.figure(num=None, figsize=(10,10))
+    plt.suptitle(f'Number of References Made by UVA Researchers \n (in big 5 providers)')
+    plt.xlabel('Year')
+    plt.ylabel('Number References')
+    plt.ylim(0, 40000)
+
+
+    plt.plot(years, totals_by_year) 
