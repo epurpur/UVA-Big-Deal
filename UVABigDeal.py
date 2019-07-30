@@ -53,7 +53,8 @@ if __name__ == '__main__':
 
     #Multiple Vendors
 #    vrl.jr1_big5_jr80_jr90_jr95_stacked_bar()
-    vrl.big5_percent_jr5_of_jr1()
+#    vrl.jr5_big5_jr80_jr90_jr95_stacked_bar()
+#    vrl.big5_percent_jr5_of_jr1()
 #    vrl.big5_cost_per_jr1_download()
 #    vrl.big5_cost_per_jr5_download()
     
