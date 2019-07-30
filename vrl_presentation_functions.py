@@ -713,7 +713,7 @@ def big5_percent_jr5_of_jr1():
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
-    big5 = ['Wiley', 'Taylor & Francis', 'Springer', 'Sage', 'Elsevier']    
+    big5 = ['Elsevier', 'Sage', 'Springer', 'Taylor & Francis', 'Wiley']
     
     percent_jr5_of_jr1 = []
     
@@ -840,14 +840,14 @@ def big5_cost_per_jr1_download():
     Fix this to incorporate the usual csv reading the data instead of hard coded values"""
 
     downloads_info = []
-
+    
     cost_per_provider = {
-                    'Wiley' : [1016814.29, 246771],
-                    'Taylor & Francis' : [95475.00, 46514],
-                    'Springer' : [928223.19, 134038],
-                    'Sage' : [207700.00, 68907],
-                    'Elsevier' : [2340568.00, 740070]
-                    }  
+            'Elsevier' : [2340568.00, 740070],
+            'Sage' : [207700.00, 68907],
+            'Springer' : [928223.19, 134038],
+            'Taylor & Francis' : [95475.00, 46514],
+            'Wiley' : [1016814.29, 246771]
+            }
     
     for provider_name, values in cost_per_provider.items():
         package_cost = values[0]
@@ -881,15 +881,15 @@ def big5_cost_per_jr5_download():
     price by total number of JR5 downloads. JR5 downloads are all years' downloads in current year.
     Fix this to incorporate the usual csv reading the data instead of hard coded values"""
 
-    downloads_info = []
-
+    downloads_info = [] 
+    
     cost_per_provider = {
-                    'Wiley' : [1016814.29, 36531],
-                    'Taylor & Francis' : [95475.00, 7135],
-                    'Springer' : [928223.19, 32909],
-                    'Sage' : [207700.00, 9810],
-                    'Elsevier' : [2340568.00, 153142]
-                    }  
+            'Elsevier' : [2340568.00, 153142],
+            'Sage' : [207700.00, 9810],
+            'Springer' : [928223.19, 32909],
+            'Taylor & Francis' : [95475.00, 7135],
+            'Wiley' : [1016814.29, 36531]
+            }
     
     for provider_name, values in cost_per_provider.items():
         package_cost = values[0]
