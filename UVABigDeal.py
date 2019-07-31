@@ -30,8 +30,9 @@ if __name__ == '__main__':
 #    vrl.big5_percent_jr5_of_jr1()
 #    vrl.big5_cost_per_jr1_download()
 #    vrl.big5_cost_per_jr5_download()
-#    vrl.total_references_uva_authors()
+    vrl.total_references_uva_authors()
 #    vrl.uva_references_over_time()
+    
 #    vrl.number_of_articles_published_per_year()
 #    vrl.number_uva_papers_over_time()
 #    vrl.percent_uva_papers_over_time()     # has % formatting
@@ -43,7 +44,7 @@ if __name__ == '__main__':
 #    vrl.jr1_by_discipline_by_provider('Elsevier')
 #    vrl.jr5_by_discipline_by_provider('Elsevier')
 #    vrl.references_by_discipline_by_provider('Elsevier')
-    vrl.papers_by_discipline_by_provider('Elsevier')
+#    vrl.papers_by_discipline_by_provider('Elsevier')
     
     
     
