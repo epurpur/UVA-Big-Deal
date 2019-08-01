@@ -121,5 +121,7 @@ def percent_references_uva_authors():
     plt.plot(years, all_percent_by_provider_of_total_by_year[4], label='Wiley')
     
     plt.legend()
+    plt.savefig('test.jpg')       #saves output to working directory
+    
     
 percent_references_uva_authors()

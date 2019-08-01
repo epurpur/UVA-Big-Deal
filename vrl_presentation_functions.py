@@ -19,8 +19,8 @@ import numpy as np
 
 """Functions that will be presented at the VRL meeting, august 5"""
 
-def number_of_articles_published_per_year():
-    """Plots # of articles published by all big 5 providers per year"""
+def number_of_papers_published_per_year():
+    """Plots # of papers published by all big 5 providers per year"""
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
@@ -71,6 +71,8 @@ def number_of_articles_published_per_year():
     plt.plot(years, papers_by_provider[4], label='Wiley')
     
     plt.legend()
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
 
 
 def number_uva_papers_over_time():
@@ -128,6 +130,8 @@ def number_uva_papers_over_time():
     plt.plot(years, publications_by_provider[4], label='Wiley')
     
     plt.legend()
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
 
 
 def percent_uva_papers_over_time():
@@ -210,6 +214,8 @@ def percent_uva_papers_over_time():
     plt.plot(years, percentage_by_provider[4], label='Wiley')
     
     plt.legend()
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
 
 
 def oa_percent_papers_available_over_time():
@@ -268,6 +274,8 @@ def oa_percent_papers_available_over_time():
     plt.plot(years, oa_by_provider[4], label='Wiley')
     
     plt.legend()
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
      
 
 
@@ -358,6 +366,9 @@ def big5_percent_jr5_of_jr1():
     plot = plt.bar(big5, percent_jr5_of_jr1, width=.8, color='green')   
     plt.ylabel('Percent of Total')
     plt.ylim(0, 1)  #changes top and bottom limit of y axis in plot
+
+    plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.0%}'))    #formats y axis as %
+
     
     for i in plot:
         score = i.get_height()
@@ -367,6 +378,9 @@ def big5_percent_jr5_of_jr1():
                  '{:.1%}'.format(score),
                  ha='center',
                  va='bottom')
+        
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
 
         
     
@@ -494,6 +508,8 @@ def big5_cost_per_jr1_download():
                  '${:,.2f}'.format(score),
                  ha='center',
                  va='bottom')
+
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
         
 
         
@@ -536,6 +552,8 @@ def big5_cost_per_jr5_download():
                  '${:,.2f}'.format(score),
                  ha='center',
                  va='bottom')
+
+        plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
     
     
         
@@ -583,7 +601,8 @@ def jr1_by_discipline_by_provider(provider_name):
                  ha='center',
                  va='center')
     
-    plt.show()
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
       
     
     
@@ -628,6 +647,9 @@ def jr5_by_discipline_by_provider(provider_name):
                  '{:,.0f}'.format(score),
                  ha='center',
                  va='center')
+        
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
 
         
 
@@ -674,6 +696,9 @@ def references_by_discipline_by_provider(provider_name):
                  ha='center',
                  va='center')
         
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
+        
     
 
 def papers_by_discipline_by_provider(provider_name):
@@ -719,6 +744,9 @@ def papers_by_discipline_by_provider(provider_name):
                  '{:,.0f}'.format(score),
                  ha='center',
                  va='center')
+        
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
         
         
 
@@ -778,6 +806,8 @@ def uva_references_over_time():
     plt.plot(years, ref_by_provider[4], label='Wiley')
 
     plt.legend()  
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
     
 
 def percent_references_uva_authors():
@@ -893,6 +923,8 @@ def percent_references_uva_authors():
     plt.plot(years, all_percent_by_provider_of_total_by_year[4], label='Wiley')
     
     plt.legend()
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
     
     
 def jr1_big5_jr80_jr90_jr95_stacked_bar():
@@ -990,6 +1022,8 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
         plt.bar(provider, jr90, bottom=jr80, color='moccasin')
         plt.bar(provider, jr95, bottom=(jr80 + jr90), color='paleturquoise')
         plt.bar(provider, total_values, bottom=(jr80 + jr90 + jr95), color='silver')
+        
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
 
 
 def jr5_big5_jr80_jr90_jr95_stacked_bar():
@@ -1089,6 +1123,9 @@ def jr5_big5_jr80_jr90_jr95_stacked_bar():
         plt.bar(provider, jr90, bottom=jr80, color='moccasin')
         plt.bar(provider, jr95, bottom=(jr80 + jr90), color='paleturquoise')
         plt.bar(provider, total_values, bottom=(jr80 + jr90 + jr95), color='silver')
+
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
                  
     
 def references_big5_jr80_jr90_jr95_stacked_bar():
@@ -1187,6 +1224,9 @@ def references_big5_jr80_jr90_jr95_stacked_bar():
         plt.bar(provider, jr90, bottom=jr80, color='moccasin')
         plt.bar(provider, jr95, bottom=(jr80 + jr90), color='paleturquoise')
         plt.bar(provider, total_values, bottom=(jr80 + jr90 + jr95), color='silver')
+
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
 
 
         
@@ -1287,6 +1327,9 @@ def papers_big5_jr80_jr90_jr95_stacked_bar():
         plt.bar(provider, jr95, bottom=(jr80 + jr90), color='paleturquoise')
         plt.bar(provider, total_values, bottom=(jr80 + jr90 + jr95), color='silver')
 
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
+
         
 
 def total_references_uva_authors():
@@ -1350,3 +1393,6 @@ def total_references_uva_authors():
     plt.ylim(0, 120000)
 
     plt.plot(years, totals_by_year) 
+    
+    plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
