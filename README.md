@@ -29,11 +29,12 @@ JR5 - "Articles dowloaded in 2017 and published in 2017" (Current articles)
 
 
 To Do List:
--Familiarize yourself with the existing code
+-Familiarize yourself with the existing code, JournalsPerProvider.csv data
 -Make nice, consistent Documentation strings for the vrl_presentation_functions. I'd like them to be consistent as most of 
-them are similar data sliced and diced different ways.
--Descriptive variable names (as best we can)
+them are similar data sliced and diced different ways. Uniform documentation strings.
+-Descriptive variable names (as best we can). Uniform variable names.
 -more documentation in code if needed (using #)
+
 -Add labels to a couple of the plots (jr80_jr90_jr95 functions)
 -fix the "JournalsPerProvider_noJR1" and "JournalsPerProvider_noJR5" null values
 
