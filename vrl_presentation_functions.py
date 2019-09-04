@@ -276,8 +276,6 @@ def oa_percent_papers_available_over_time():
     plt.legend()
     plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
 
-     
-
 
 def oa_number_papers_available_over_time():
     """Number of papers available Open Access (oa) for each of the big 5 providers over time (2008-2017)
@@ -932,7 +930,10 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
     JR80 is journals that make up 80% of downloads. JR90 are journals that make up 90% of downloads.
     JR95 are journals that make up 95% of downloads. These will all be plotted together."""
     
-    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
+#    TODO: ADD LABELS TO PLOT
+    
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
+
 
     big5 = ['Elsevier', 'Sage', 'Springer', 'Taylor & Francis', 'Wiley'] 
         
@@ -968,10 +969,10 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
             if jr80_running_tally < (total_jr1_downloads * 0.8):
                 jr80_highly_used_journals.append(i)
                 jr80_running_tally += i[1]
-                
+#                
         jr80_score = (len(jr80_highly_used_journals))/(total_journals)
         print(len(jr80_highly_used_journals))
-                
+#                
         for i in jr1_tuples_sorted:
             if jr90_running_tally < (total_jr1_downloads * 0.9):
                 jr90_highly_used_journals.append(i)
@@ -981,6 +982,7 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
         print(len(jr90_highly_used_journals))
         jr90_score = (jr90_score - jr80_score)
 
+
         for i in jr1_tuples_sorted:
             if jr95_running_tally < (total_jr1_downloads * 0.95):
                 jr95_highly_used_journals.append(i)
@@ -989,7 +991,6 @@ def jr1_big5_jr80_jr90_jr95_stacked_bar():
         jr95_score = (len(jr95_highly_used_journals))/(total_journals)
         print(len(jr95_highly_used_journals))
         jr95_score = (jr95_score - (jr80_score + jr90_score))
-        print(total_journals)
         
         total_score = (1- (jr80_score+jr90_score+jr95_score))
 
@@ -1030,8 +1031,11 @@ def jr5_big5_jr80_jr90_jr95_stacked_bar():
     """Creates stacked bar plot showing jr80, jr90, jr95 score for big 5 providers.
     JR80 is journals that make up 80% of downloads. JR90 are journals that make up 90% of downloads.
     JR95 are journals that make up 95% of downloads. These will all be plotted together."""
+
+#    TODO: ADD LABELS TO PLOT
+
     
-    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
 
     big5 = ['Elsevier', 'Sage', 'Springer', 'Taylor & Francis', 'Wiley'] 
 
@@ -1126,14 +1130,19 @@ def jr5_big5_jr80_jr90_jr95_stacked_bar():
 
     plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
 
-                 
+             
     
 def references_big5_jr80_jr90_jr95_stacked_bar():
     """Creates stacked bar plot showing jr80, jr90, jr95 score for big 5 providers.
     JR80 is journals that make up 80% of downloads. JR90 are journals that make up 90% of downloads.
     JR95 are journals that make up 95% of downloads. These will all be plotted together."""
+
+
+#    TODO: ADD LABELS TO PLOT
+
     
-    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)           
+
 
     big5 = ['Elsevier', 'Sage', 'Springer', 'Taylor & Francis', 'Wiley'] 
 #    big5 = ['AIP']        
@@ -1227,15 +1236,21 @@ def references_big5_jr80_jr90_jr95_stacked_bar():
 
     plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
 
-
+references_big5_jr80_jr90_jr95_stacked_bar()
 
         
 def papers_big5_jr80_jr90_jr95_stacked_bar():
     """Creates stacked bar plot showing jr80, jr90, jr95 score for big 5 providers.
     JR80 is journals that make up 80% of downloads. JR90 are journals that make up 90% of downloads.
     JR95 are journals that make up 95% of downloads. These will all be plotted together."""
+
+
+#    TODO: ADD LABELS TO PLOT
+
     
-    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
+#    data = pd.read_csv('JournalsPerProvider_noJR1.csv', skiprows=8)           #reading from different file. Needs to be fixed to read from same file, but ignore 'N/A' values
+    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)           
+
 
     big5 = ['Elsevier', 'Sage', 'Springer', 'Taylor & Francis', 'Wiley'] 
 #    big5 = ['AIP']        
