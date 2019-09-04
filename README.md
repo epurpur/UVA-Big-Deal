@@ -36,7 +36,7 @@ them are similar data sliced and diced different ways. Uniform documentation str
 -more documentation in code if needed (using #)
 
 -Add labels to a couple of the plots (jr80_jr90_jr95 functions)
--fix the "JournalsPerProvider_noJR1" and "JournalsPerProvider_noJR5" null values
+
 
 Later:
 -Migrate project to GitLab?
