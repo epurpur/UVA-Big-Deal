@@ -1,5 +1,47 @@
 GitHub repository for 1Figr data
 
+
+Steps to use data...
+
+1- Save the 'JournalsPerProvider' tab from your 1Figr/1Science Dataset as CSV file ('JournalsPerProvider.csv').  Must be in 
+UTF-8 encoding to be read correctly by Pandas.
+
+2- Notice in the 'JournalsPerProvider' CSV document that the column headers begin on row 8. Keep this the way it is. The code 
+skips to the 8th row, and then begins parsing the data.
+
+3- Probably the easiest way to do steps 3-7 is in Microsoft Excel. Open the CSV document (JournalsPerProvider.csv) in excel and 
+format the data in the following columns as 'numeric' data type. If you don't do this, Pandas reads these as strings or some 
+other undefined data type:
+'Downloads JR1 2017', 'Downloads JR5 2017 in 2017', 'References', 'Papers' (These should be columns H,I,J,K in your dataset).
+
+4- Rename the following columns under 'Papers per journal/provider by your institution's authors (As Measured in Scopus)' 
+(should be columns AA - AJ) as 'papers_2008', 'papers_2009', 'papers_2010' and so on. Then change the data in all these 
+columns to 'numeric' data type.
+
+5- Repeat the process for all columns under 'References to journal/provider by your institution's authors (As measures in 
+Scopus)' (should be columnns AK-AT) as 'ref_2008', 'ref_2009', 'ref_2010' and so on. Change data in these columns to 
+'numeric' data type.
+
+6- Repeat the process for all columns under 'OA papers in 1findr per journal/provider (Intersection with Scopus)' (should be 
+columns AU-BD) as 'oa_papers_2008', 'oa_papers_2009', 'oa_papers_2010' and so on. Change data in these columns to 'numeric' 
+data type.
+
+7- Repeat the process for all columns under 'Total Papers in Scopus per journal/provider' (should be columns BO-BX) as 
+'total_2008', 'total_2009', 'total_2010'. Change data in these columns to 'numeric' data type.
+
+8- Lastly, keep in mind your 'JournalsPerProvider.csv' file should be saved in the working directory or same directory as the 
+code. Otherwise you'll have to change the file paths at the beginning of each function to read to the new working directory. 
+
+
+
+
+
+
+
+
+~~~~~~~~~
+To Do list
+~~~~~~~~~
 -Will Share Original with you (Google Docs or Box?)
 
 JR1 - "Articles downloaded in 2017, but published in any year"
