@@ -3,13 +3,15 @@ GitHub repository for 1Figr data
 
 Steps to use data...
 
-1- Save the 'JournalsPerProvider' tab from your 1Figr/1Science Dataset as CSV file ('JournalsPerProvider.csv').  Must be in 
+1- Save the 'JournalsPerProvider' tab from your master copy of the 1Figr/1Science Dataset as CSV file as 'JournalsPerProvider.csv'.  Must be in 
 UTF-8 encoding to be read correctly by Pandas.
 
-2- Notice in the 'JournalsPerProvider' CSV document that the column headers begin on row 8. Keep this the way it is. The code 
+2- Notice in the 'JournalsPerProvider' CSV document that the column headers begin on row 8. Keep it this way. The code 
 skips to the 8th row, and then begins parsing the data.
 
-3- Probably the easiest way to do steps 3-7 is in Microsoft Excel. Open the CSV document (JournalsPerProvider.csv) in excel and 
+*Probably the easiest way to do steps 3-7 is in Microsoft Excel. 
+
+3- Open the CSV document (JournalsPerProvider.csv) in excel and 
 format the data in the following columns as 'numeric' data type. If you don't do this, Pandas reads these as strings or some 
 other undefined data type:
 'Downloads JR1 2017', 'Downloads JR5 2017 in 2017', 'References', 'Papers' (These should be columns H,I,J,K in your dataset).
