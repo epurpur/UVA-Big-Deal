@@ -135,7 +135,6 @@ def number_papers_over_time():
 #    plt.show()    
     plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
 
-number_papers_over_time()
 
 
 def oa_percent_papers_available_over_time():
