@@ -12,8 +12,9 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 import matplotlib.patches as mpatches
 from operator import itemgetter
-import numpy as np
 
+
+your_institution = 'UVA'   #Replace this string with your institution's preferred name. This is an example
 
 #########################################################
 #VRL presentation functions
@@ -118,7 +119,7 @@ def number_papers_over_time():
     years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
 
     plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle(f'Number of UVA Authored Papers by Year')
+    plt.suptitle(f'Number of Papers {your_institution} Authors each year')
     plt.xlabel('Year')
     plt.ylabel('Paper Count')
 
@@ -133,6 +134,8 @@ def number_papers_over_time():
 
 #    plt.show()    
     plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
+number_papers_over_time()
 
 
 def oa_percent_papers_available_over_time():
@@ -289,7 +292,7 @@ def references_over_time():
     years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
 
     plt.figure(num=None, figsize=(10,10))
-    plt.suptitle(f'Number of References Made by UVA Researchers by Provider')
+    plt.suptitle(f'Number of References Made by {your_institution} Researchers by Provider')
     plt.xlabel('Year')
     plt.ylabel('Number References')
     plt.ylim(0, 18000)
@@ -696,7 +699,7 @@ def papers_big5_jr80_jr90_jr95_stacked_bar():
 
     #make plot
     plt.figure(num=None, figsize=(10, 10))
-    plt.suptitle('Percentage of Titles with Papers by UVA Authors')
+    plt.suptitle('Percentage of Titles with Papers by {your_institution} Authors')
     plt.ylabel('Percent of total titles')
     
     #make custom plot legend
@@ -781,7 +784,7 @@ def total_references_per_year():
     years = ['2008','2009','2010','2011','2012','2013','2014','2015','2016','2017']
 
     plt.figure(num=None, figsize=(10,10))
-    plt.suptitle(f'Number of References Made by UVA Researchers \n (across all providers)')
+    plt.suptitle(f'Number of References Made by {your_institution} Researchers  \n (across all providers)')
     plt.xlabel('Year')
     plt.ylabel('Number References')
     plt.ylim(0, 120000)
@@ -790,6 +793,7 @@ def total_references_per_year():
 
 #    plt.show()    
     plt.savefig('test.jpg', bbox_inches='tight')      #saves image in working directory
+
 
 ###################################################################################
 #JR1 functions. Chart sizing and labeling needs to be dynamic
@@ -1080,7 +1084,7 @@ def jr1_jr80_big5_downloads():
 
 def jr1_jr80_big5_citations():
     """Gets number of citations for each of the big 5 providers.
-    Citations are measured as publications that have cited a UVA-authored article"""
+    Citations are measured as publications that have cited an article authored by someone affiliated with your institution"""
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
@@ -1101,7 +1105,7 @@ def jr1_jr80_big5_citations():
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'Citations by Provider \n (# of UVA Authored Papers Cited)')
+    plt.suptitle(f"Citations by Provider \n (# of your {your_institution} Authored Papers Cited)")
     plot = plt.barh(big5, references_by_provider, height=.8, color='green')
     
     for i in plot:
@@ -1116,7 +1120,7 @@ def jr1_jr80_big5_citations():
 
 def jr1_jr80_big5_publications():
     """Gets number of papers/publications for each of big 5 providers.
-    Publications are measured as papers with at least one UVA author"""
+    Publications are measured as papers with at least one author from your institution"""
     
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
@@ -1138,7 +1142,7 @@ def jr1_jr80_big5_publications():
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'Publications by Provider \n (# of UVA Authored Papers Published)')
+    plt.suptitle(f"Publications by Provider \n (# of your {your_institution} Authored Papers Published)")
     plot = plt.barh(big5, publications_by_provider, height=.8, color='green')
     
     for i in plot:
@@ -1178,42 +1182,6 @@ def jr1_big5_by_field(field_choice):
     plt.barh(big5_packages, big5_total_by_field, height=.8, color='green')
     plt.grid()
     plt.show() 
-
-
-def jr1_downloads_by_discipline(provider_name):
-    """Shows distribution of JR1 downloads by discipline for the specified provider.
-    'Disciplines' is a column we derived from the pre-existing 'fields' column in the 1figr data.
-    Disciplines has mapped those field categories into more UVA specific language"""
-    
-    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
-    
-    subset_by_provider = data.loc[data['Provider'] == provider_name]
-
-    disciplines_data = subset_by_provider.groupby(['Discipline'], as_index=False).sum().values.tolist()
-
-    disciplines = []
-    jr1_totals = []
-    
-    for i in disciplines_data:
-        discipline_name = i[0]
-        disciplines.append(discipline_name)
-        discipline_jr1_downloads = i[2]
-        jr1_totals.append(int(discipline_jr1_downloads))      #int() to remove decimal points
-
-    mpl.rcParams['ytick.major.width'] = 1
-    mpl.rcParams['xtick.major.width'] = 1
-    plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'Distribution of JR1 downloads by Discipline for Provider: {provider_name} \n (Disciplines are specific to UVA)')
-    plot = plt.barh(disciplines, jr1_totals, height=.8, color='green')    
-        
-    for i in plot:
-        score = i.get_width()
-        
-        plt.text(i.get_width() + 20500,           #sets x axis position of labels
-                 i.get_y() + .35,
-                 score,
-                 ha='center',
-                 va='center') 
         
         
 #########################################################        
@@ -1309,7 +1277,8 @@ def jr5_big5_by_field(field_choice):
 #other functions. Chart sizing and labeling needs to be dynamic
 
 def journals_by_domain():
-    """Counting occurrences of downloads in each domain from JournalsPerPackage.csv"""
+    """Counting occurrences of downloads in each domain from JournalsPerPackage.csv
+    This is using the domain column."""
     
     data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
     
@@ -1441,7 +1410,7 @@ def references_by_field_by_provider(provider_name):
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'References by UVA authors by field for Provider: {provider_name}')
+    plt.suptitle(f"References by {your_institution} Authors by field for Provider: {provider_name}")
     plt.barh(fields, sums_by_field, height=.8, color='green')
     plt.grid()
     plt.show() 
@@ -1470,52 +1439,13 @@ def publications_by_field_by_provider(provider_name):
     mpl.rcParams['ytick.major.width'] = 1
     mpl.rcParams['xtick.major.width'] = 1
     plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'Publications by UVA authors by field for Provider: {provider_name}')
+    plt.suptitle(f"Publications by {your_institution} Authors by field for Provider: {provider_name}")
     plt.barh(fields, sums_by_field, height=.8, color='green')
     plt.grid()
     plt.show()
 
 
-def big5_percent_jr5_of_jr1():
-    """A measurement of currency. Compares JR5 downloads to JR1 downloads for each of the big 5 providers.
-    JR5 downloads are 2017 articles downloaded in 2017.
-    JR1 downloads are all years articles downloaded in 2017.
-    We want to see what % of current articles people are downloading."""
-    
-    data = pd.read_csv('JournalsPerProvider.csv', skiprows=8)
-    
-    big5 = ['Elsevier', 'Taylor & Francis', 'Sage', 'Springer', 'Wiley']    
-#    big5 = ['AIP', 'American Chemical Society']
-    
-    percent_jr5_of_jr1 = []
-    
-    for provider_name in big5:
-        
-        subset_by_provider = data.loc[data['Provider'] == provider_name]
 
-        journals_data = subset_by_provider.groupby('Journal', as_index=False).sum().values.tolist()
-        
-        for i in journals_data:
-            if i[0] == provider_name:
-                jr1_total = i[2]
-                jr5_total = i[3]
-                ratio = jr5_total/jr1_total
-                percent_jr5_of_jr1.append(ratio)
-                
-    mpl.rcParams['ytick.major.width'] = 1
-    mpl.rcParams['xtick.major.width'] = 1
-    plt.figure(num=None, figsize=(8,8))
-    plt.suptitle(f'Percent JR5 downloads of JR1 downloads \n (Measures currency of article use)')
-    plot = plt.barh(big5, percent_jr5_of_jr1, height=.8, color='green')    
-        
-    for i in plot:
-        score = i.get_width()
-        
-        plt.text(i.get_width() - .0175,           #sets x axis position of labels
-                 i.get_y() + .35,
-                 '{:.2%}'.format(score),
-                 ha='center',
-                 va='center') 
 
 
 
